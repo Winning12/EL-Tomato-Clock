@@ -57,12 +57,12 @@ export default class Register extends Component {
             let loginreturn = jsonData.status;
             let description = jsonData.description;
             if (loginreturn=="fail"){
-              if (description=="username does not exist")
-                this.refs.logininfo.show("登录失败，用户名不存在");
+              if (description=="username has been used")
+                this.refs.logininfo.show("用户名已存在");
             }
             else{
-              this.refs.logininfo.show("登录成功");
-              this.props.navigator.pop();
+              this.refs.logininfo.show("注册成功");
+              this.props.navigator.popToTop();
             }
         })
       }
