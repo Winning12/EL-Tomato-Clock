@@ -41,7 +41,7 @@ export default class Login extends Component {
         this.refs.logininfo.show("用户名或密码为空！")
     }
     else{
-        fetch('http://192.168.43.63:3000/signin', {
+        fetch('http://192.168.1.100:3000/signin', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ export default class Login extends Component {
   }
 
   loginout(){
-    fetch('http://192.168.43.63:3000/signout', {
+    fetch('http://192.168.1.100:3000/signout', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'

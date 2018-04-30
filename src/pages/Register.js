@@ -42,14 +42,15 @@ export default class Register extends Component {
         this.refs.logininfo.show("两次输入密码不一致！")
       }
       else{
-        fetch('http://192.168.43.63:3000/signup', {
+        fetch('http://192.168.1.100:3000/signup', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
         },
         body: JSON.stringify({
               name:this.state.name,
-              password:this.state.password
+              password:this.state.password,
+              repassword:this.state.password,
               })
         }).then((response) => response.json())
         .then((jsonData) => {
@@ -69,7 +70,7 @@ export default class Register extends Component {
   }
 
   /*loginout(){
-    fetch('http://192.168.43.63:3000/signout', {
+    fetch('http://192.168.1.100:3000/signout', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
