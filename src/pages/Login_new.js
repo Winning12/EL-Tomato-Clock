@@ -41,6 +41,7 @@ export default class Login extends Component {
         this.refs.logininfo.show("用户名或密码为空！")
     }
     else{
+      //when tested on server,use http://www.clavier.moe
         fetch('http://192.168.1.100:3000/signin', {
         method: 'POST',
         headers: {
