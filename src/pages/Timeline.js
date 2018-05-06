@@ -62,17 +62,9 @@ export default class TimeLine extends Component {
                     keyExtractor={this.keyExtractor}
                     renderItem={this.getView}
 
-                    //指定为GridView效果，需要下面两个属性同时设置，且numColumns必须大于1
-                    // numColumns={2}
-                    // columnWrapperStyle={{borderWidth: 2, borderColor: 'black'}}
-
-                    //下拉刷新，必须设置refreshing状态
                     onRefresh={this.onRefresh}
                     refreshing={this.state.refreshing}
 
-                    //上拉加载
-                    // onEndReachedThreshold={0}
-                    // onEndReached={this.onEndReached}
                     ListFooterComponent={
                         <View style={{alignItems: 'center',backgroundColor:'white'}}>
                         <Text style={{color: 'rgb(222,148,151)',fontSize:45}}>Loading</Text>
@@ -157,30 +149,23 @@ export default class TimeLine extends Component {
 
     };
 
-    /**
-     * json 数据实体类
-     */
     ItemData(images, title, id) {
         this.images = new Array(images);
         this.title = title;
         this.id = id;
     }
 
-    //渲染完成，请求网络数据
     componentDidMount() {
         fetch(this.props.url)
             .then((response) => response.json())
             .then((response) => {
-                //解析json数据
                 var json = response['stories'];
-                //更新状态机
                 this.setState({
                     data: json,
                 });
             })
             .catch((error) => {
                 if (error) {
-                    //网络错误处理
                     console.log('error', error);
                 }
             });
