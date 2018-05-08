@@ -13,6 +13,7 @@ import {
 import My from './My'
 import Register from './Register'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import { StackNavigator } from 'react-navigation';
 
 export default class Login extends Component {
 
@@ -111,42 +112,12 @@ export default class Login extends Component {
   }
 
   render() {
-    if (this.state.renderPlaceholderOnly) {
-      return this._render_earlier();
-    }
-    else{
-      return this._render_later();
-    }
+      return this._render_later();//now render only once
   }
 
   _render_later() {
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.header}>
-        <View style={styles.left}>
-        <TouchableOpacity
-          activeOpacity={0.75}
-          onPress={this._back}
-          style={{flexDirection:'row',alignItems: 'center'}}
-        >
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:16}}>返回</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={styles.center}>
-            <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>登录</Text>
-        </View>
-        <View style={styles.right}>
-          <TouchableOpacity
-          activeOpacity={0.75}
-          onPress={this.regist}
-          style={{flexDirection:'row',alignItems: 'center'}}
-          >
-            <Text style={{color: 'rgb(222,148,151)',fontSize:16}}>注册</Text>
-            <Image style={{width: 30, height: 40}} source={require('../resource/my_right.png')}/>
-          </TouchableOpacity>
-        </View>
-      </View>
 
       <ImageBackground
           style={styles.container}
@@ -197,7 +168,7 @@ export default class Login extends Component {
     );
   }
   
-  _render_earlier() {
+  /*_render_earlier() {
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
 
@@ -216,6 +187,7 @@ export default class Login extends Component {
     </View>
     );
   }
+  */
 }
 
 

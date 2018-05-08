@@ -8,7 +8,7 @@ import {
     Image,
     AsyncStorage,
 } from 'react-native'
-import {Navigator} from 'react-native-deprecated-custom-components'
+import { StackNavigator } from 'react-navigation';
 import Login from './Login_new'
 import MyChart from './MyChart'
 
@@ -19,6 +19,10 @@ export default class Profile extends PureComponent {
                 name:"",
         };
     }
+    
+    static navigationOptions = {
+        header: null,
+      };
 
     componentDidMount() {
         AsyncStorage.getItem("user")
@@ -43,9 +47,12 @@ export default class Profile extends PureComponent {
     }
 
     _onLogin = () => {
-        this.props.navigator.push({
+        this.props.navigation.replace({
+            scene: Login,
+          });
+        /*this.props.navigator.push({
             component: Login,
-        })
+        })*/
     }
 
     _onChart = () => {
@@ -57,6 +64,7 @@ export default class Profile extends PureComponent {
     _onPressStaticCell = title => alert(title)
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
                 <ImageBackground
@@ -79,7 +87,7 @@ export default class Profile extends PureComponent {
                     <TouchableOpacity
                     activeOpacity={0.75}
                     style={styles.loginContainer}
-                    onPress={this._onLogin}
+                    onPress={()=>navigate('Login')}
                     >
                         <Text style={{color: 'white'}}>点击登录</Text>
                     </TouchableOpacity>

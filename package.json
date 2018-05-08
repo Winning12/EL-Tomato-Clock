@@ -17,7 +17,7 @@
     "react-native-svg": "^6.3.1",
     "react-native-svg-charts": "^5.0.0",
     "react-native-tab-navigator": "^0.3.4",
-    "react-navigation": "^1.5.11",
+    "react-navigation": "^1.5.12",
     "react-redux": "^5.0.7",
     "uuid": "^3.2.1"
   },
