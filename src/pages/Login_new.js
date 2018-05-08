@@ -10,18 +10,32 @@ import {
     InteractionManager,
     AsyncStorage,
     } from 'react-native'
-import My from './My'
-import Register from './Register'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { StackNavigator } from 'react-navigation';
 
 export default class Login extends Component {
+  static navigationOptions = {
+    headerTitle: 
+      <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
+        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>登录</Text>
+      </View>,
+    headerRight:
+      <View style={{flex: 1,flexDirection: 'column',alignItems: 'flex-end',marginRight:20}}>
+        <TouchableOpacity
+        activeOpacity={0.75}
+        onPress={() => navigation.navigate('Register')}
+        style={{flexDirection:'row',alignItems: 'center'}}>
+          <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
+        </TouchableOpacity>
+      </View>,
+    headerTintColor:'rgb(222,148,151)',
+  };
 
   constructor(props) {
         super(props);
         this.loginin=this.loginin.bind(this);
-        this._back=this._back.bind(this);
         this.regist=this.regist.bind(this);
+        navigation=this.props.navigation;
         this.state = {
                 conceal:true,
                 renderPlaceholderOnly: true,
@@ -68,7 +82,7 @@ export default class Login extends Component {
                 AsyncStorage.setItem('user',this.state.name); 
                 this.refs.logininfo.show("已经登录");
                 this.timer = setTimeout(() => {
-                  this.props.navigator.pop();
+                  this.props.navigation.goBack();
                 }, 1000)
               }
               
@@ -76,7 +90,7 @@ export default class Login extends Component {
                 AsyncStorage.setItem('user',this.state.name); 
                 this.refs.logininfo.show("登录成功");
                 this.timer = setTimeout(() => {
-                  this.props.navigator.pop();
+                  this.props.navigation.goBack();
                 }, 1000)
               }
             }
@@ -98,13 +112,9 @@ export default class Login extends Component {
   }
 
   regist(){
-    this.props.navigator.push({
-      component: Register,
-    })
-  }
-
-  _back(){
-    this.props.navigator.pop()
+    this.props.navigation.replace({
+      scene: Register,
+    });
   }
 
   _conceal(){
@@ -186,8 +196,7 @@ export default class Login extends Component {
     </ImageBackground>
     </View>
     );
-  }
-  */
+  }*/
 }
 
 

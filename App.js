@@ -53,9 +53,9 @@ export default class App extends Component<Props> {
     return (
       <View style={styles.container} >  
                 <TabNavigator>  
-                 {this._renderTabarItems('番茄时钟',require('../main/src/resource/ic_tab_homepage.png'),require('../main/src/resource/ic_tab_homepage_select.png'),HomePage)}
-                 {this._renderTabarItems('时间线',require('../main/src/resource/ic_tab_search.png'),require('../main/src/resource/ic_tab_search_select.png'),TimeLine)}
-                 {this._renderTabarItems('我的',require('../main/src/resource/ic_tab_my.png'),require('../main/src/resource/ic_tab_my_select.png'),My)}
+                 {this._renderTabarItems('番茄时钟',require('./src/resource/ic_tab_homepage.png'),require('../main/src/resource/ic_tab_homepage_select.png'),HomePage)}
+                 {this._renderTabarItems('时间线',require('./src/resource/ic_tab_search.png'),require('../main/src/resource/ic_tab_search_select.png'),TimeLine)}
+                 {this._renderTabarItems('我的',require('./src/resource/ic_tab_my.png'),require('../main/src/resource/ic_tab_my_select.png'),My)}
                 </TabNavigator>  
             </View>
     );

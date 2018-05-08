@@ -14,10 +14,20 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 
 export default class Register extends Component {
 
+  static navigationOptions = {
+    headerTitle: 
+      <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
+        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
+      </View>,
+    headerRight:      
+    <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
+    </View>,
+    headerTintColor:'rgb(222,148,151)',
+  };
+
   constructor(props) {
         super(props);
         this.regist=this.regist.bind(this);
-        this._back=this._back.bind(this);
         this.state = {
                 conceal:true,
                 renderPlaceholderOnly: true,
@@ -27,11 +37,11 @@ export default class Register extends Component {
         };
     }
 
-  componentDidMount() {
+  /*componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({renderPlaceholderOnly: false});
     });
-  }
+  }*/
 
   regist() {
     if ((this.state.password_veri=="")||(this.state.name=="")||(this.state.password=="")){
@@ -83,44 +93,17 @@ export default class Register extends Component {
     })
   }*/
 
-  _back(){
-    this.props.navigator.pop()
-  }
-
   _conceal(){
     this.setState({conceal:!this.state.conceal});
   }
 
   render() {
-    if (this.state.renderPlaceholderOnly) {
-      return this._render_earlier();
-    }
-    else{
       return this._render_later();
-    }
   }
 
   _render_later() {
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.header}>
-        <View style={styles.left}>
-        <TouchableOpacity
-          activeOpacity={0.75}
-          onPress={this._back}
-          style={{flexDirection:'row',alignItems: 'center'}}
-        >
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:16}}>已有账号</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={styles.center}>
-            <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
-        </View>
-        <View style={styles.right}>
-        </View>
-      </View>
-
       <ImageBackground
           style={styles.container}
           source={require('../resource/Back_changed.png')}

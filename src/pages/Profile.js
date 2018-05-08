@@ -22,7 +22,7 @@ export default class Profile extends PureComponent {
     
     static navigationOptions = {
         header: null,
-      };
+    };
 
     componentDidMount() {
         AsyncStorage.getItem("user")
