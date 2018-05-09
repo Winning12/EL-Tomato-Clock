@@ -28,10 +28,7 @@ import TextInput from '../components/_TextInput'
 
 export default class NewHome extends Component {
 
-  static navigationOptions = {
-    header: null,
-  };
-  
+
    constructor(props) {
          super(props);
          var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
@@ -187,14 +184,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    btn: {
-        width: 200,
-        height: 200,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        borderRadius: 100,
-        opacity:1,
+  btn: {
+    width: 200,
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 100,
+    opacity:1,
   },
  backgroundImage:{
         flex:1,
