@@ -28,6 +28,10 @@ import TextInput from '../components/_TextInput'
 
 export default class NewHome extends Component {
 
+  static navigationOptions = {
+    header: null,
+  };
+  
    constructor(props) {
          super(props);
          var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
