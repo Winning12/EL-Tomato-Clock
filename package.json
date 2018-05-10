@@ -10,6 +10,7 @@
     "prop-types": "^15.6.1",
     "react": "16.3.1",
     "react-native": "0.55.2",
+    "react-native-circular-progress": "^0.2.0",
     "react-native-deprecated-custom-components": "^0.1.2",
     "react-native-easy-toast": "^1.1.0",
     "react-native-linear-gradient": "^2.4.0",

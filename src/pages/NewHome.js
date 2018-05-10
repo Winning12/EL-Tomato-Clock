@@ -12,7 +12,7 @@ import {
     AppState
 } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
-
+import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import TextInput from '../components/_TextInput'
 
 {
@@ -24,21 +24,22 @@ import TextInput from '../components/_TextInput'
     var backIM=require('../resource/Back.png')
     var Prevtime=0
     var se=0
+    var retnormal=false
 } 
 
 export default class NewHome extends Component {
 
 
    constructor(props) {
-         super(props);
-         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
-          this.state = {
-                time:0,
-                dataSource:ds,
-                data:[],
-                time1:(new Date()).valueOf()+25*60*1000,
-                name:"请输入所完成的任务",
-                duration:10*1000
+        super(props);
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
+        this.state = {
+            time:0,
+            dataSource:ds,
+            data:[],
+            time1:(new Date()).valueOf()+25*60*1000,
+            name:"请输入所完成的任务",
+            duration:15*60*1000
         };
     }
 
@@ -54,7 +55,6 @@ export default class NewHome extends Component {
          if(s<=0){
            display="再次\n开始"
            pause=true
-           this.refs.timeup.show(this.state.duration/60000+"分钟周期完毕");
          }
          if (!pause){
           se=(s-m*60)
@@ -68,7 +68,16 @@ export default class NewHome extends Component {
           if  (display=="再次\n开始")
             return "再次\n开始"
           else
-            return "记录中"
+            this.timer = setTimeout(() => {
+              retnormal=true
+            }, 3000)
+            if(retnormal==true){
+              se=(s-m*60)
+              if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
+              return ((m)+":"+Math.floor(se))
+              retnormal=false
+            }else
+              return "记录\n日程..."
          }
         /*}
         else{
@@ -132,19 +141,22 @@ export default class NewHome extends Component {
                 source={backIM}
                 resizeMode="cover">
             <Text style={styles.backspace}> 
-             </Text>
-            <ImageBackground
-              style={{width:220, height:220,alignItems:'center',justifyContent:'center',}}
-              source={require('../resource/Home_Circle.png')}
-              resizeMode="cover">
-          <TouchableOpacity style={styles.btn} onPress={this.addPoint.bind(this)}>
-            <Text style={styles.counter}>
-             {display}
-             </Text>
-          </TouchableOpacity>
-          </ImageBackground>
-            <Text style={styles.backspace}> 
-             </Text>
+            </Text>
+            <AnimatedCircularProgress
+            size={220}
+            width={5}
+            fill={(100*1000*s/this.state.duration)}
+            tintColor="#fcb4b0"
+            onAnimationComplete={() => console.log('onAnimationComplete')}
+            backgroundColor="f9d4ca" >
+            {(fill) => (
+            <TouchableOpacity style={styles.btn} onPress={this.addPoint.bind(this)}>
+              <Text style={styles.counter}>
+              {display}
+              </Text>
+            </TouchableOpacity>
+            )}
+            </AnimatedCircularProgress>
            
             <ListView
               enableEmptySections = {true}
@@ -165,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'center',
     margin: 20,
-    color:'rgb(222,148,151)',
+    color:'#fcb4b0',
   },
   backspace: {
     fontSize: 0,

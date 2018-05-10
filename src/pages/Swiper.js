@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from 'react-native';
 
 import Swiper from 'react-native-swiper';
@@ -50,7 +51,10 @@ export default class _Swiper extends Component {
             <View style={styles.center}>
             </View>
         </View>
-        <View style={styles.slide4}>
+        <ImageBackground
+          style={{flex:1}}
+          source={require('../resource/Back_changed.png')}
+          resizeMode="cover">
           <View style={styles.center}>
             <Text style={styles.text}>Sign In | Up</Text>
             <Text style={styles.text}>For Full Experience</Text>
@@ -67,7 +71,7 @@ export default class _Swiper extends Component {
                 <Text style={styles.btText}>Not Now!</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ImageBackground>
       </Swiper>
     );
   }
@@ -77,6 +81,12 @@ export default class _Swiper extends Component {
 
 const styles = StyleSheet.create({
     wrapper: {
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white',
     },
     slide1: {
       flex: 1,
