@@ -64,6 +64,10 @@ export default class Profile extends PureComponent {
 
     render() {
         const { navigate } = this.props.navigation;
+        AsyncStorage.getItem("user")
+        .then((result) => {
+            this.setState({name:result})
+        })
         return (
             <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
                 <ImageBackground

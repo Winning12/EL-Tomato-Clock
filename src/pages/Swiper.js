@@ -15,6 +15,7 @@ export default class _Swiper extends Component {
 
   constructor(props) {
     super(props);
+
   }
 
   static navigationOptions = {

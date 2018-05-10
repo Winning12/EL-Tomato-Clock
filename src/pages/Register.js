@@ -28,6 +28,7 @@ export default class Register extends Component {
   constructor(props) {
         super(props);
         this.regist=this.regist.bind(this);
+        navigation=this.props.navigation;
         this.state = {
                 conceal:true,
                 renderPlaceholderOnly: true,
@@ -72,7 +73,7 @@ export default class Register extends Component {
             }
             else{
               this.refs.logininfo.show("注册成功");
-              this.props.navigator.popToTop();
+              this.props.navigation.navigate('BaseTab');
             }
         })
       }

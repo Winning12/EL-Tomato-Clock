@@ -81,7 +81,7 @@ export default class Loginfirst extends Component {
                 AsyncStorage.setItem('user',this.state.name); 
                 this.refs.logininfo.show("已经登录");
                 this.timer = setTimeout(() => {
-                  this.props.navigation.goBack();
+                  this.props.navigation.navigate('BaseTab');
                 }, 1000)
               }
               
@@ -89,7 +89,7 @@ export default class Loginfirst extends Component {
                 AsyncStorage.setItem('user',this.state.name); 
                 this.refs.logininfo.show("登录成功");
                 this.timer = setTimeout(() => {
-                  this.props.navigation.goBack();
+                  this.props.navigation.navigate('BaseTab');
                 }, 1000)
               }
             }
