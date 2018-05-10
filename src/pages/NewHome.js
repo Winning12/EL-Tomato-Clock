@@ -72,10 +72,11 @@ export default class NewHome extends Component {
               retnormal=true
             }, 3000)
             if(retnormal==true){
+              pause=false//防止重复回调
               se=(s-m*60)
+              retnormal=false
               if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
               return ((m)+":"+Math.floor(se))
-              retnormal=false
             }else
               return "记录\n日程..."
          }
