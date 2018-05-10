@@ -15,6 +15,17 @@ import * as shape from 'd3-shape'
 
 
 export default class MyChart extends Component {
+  
+  static navigationOptions = {
+    headerTitle: 
+      <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
+        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>专注统计</Text>
+      </View>,
+    headerRight:      
+    <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
+    </View>,
+    headerTintColor:'rgb(222,148,151)',
+  };
 
   constructor(props) {
         super(props);
@@ -50,23 +61,6 @@ export default class MyChart extends Component {
     
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.header}>
-        <View style={styles.left}>
-        <TouchableOpacity
-          activeOpacity={0.75}
-          onPress={this._back}
-          style={{flexDirection:'row',alignItems: 'center'}}
-        >
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>返回</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={styles.center}>
-            <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>专注统计</Text>
-        </View>
-        <View style={styles.right}>
-        </View>
-      </View>
 
       <ImageBackground
           style={styles.container}
@@ -115,12 +109,6 @@ export default class MyChart extends Component {
   _render_earlier() {
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-
-      <View
-        style={styles.header}>
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>返回</Text>
-      </View>
 
       <ImageBackground
           style={styles.container}

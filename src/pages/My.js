@@ -29,6 +29,7 @@ export const ProfileRoutes = StackNavigator({
   Home: { screen: Profile },
   Login: { screen : Login},
   Register: { screen : Register},
+  Chart:  {screen:MyChart},
   }, {
       transitionConfig: TransitionConfiguration,
 });

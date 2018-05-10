@@ -13,7 +13,7 @@ import {
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { StackNavigator } from 'react-navigation';
 
-export default class Login extends Component {
+export default class Loginfirst extends Component {
   static navigationOptions = {
     headerTitle: 
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
@@ -34,7 +34,6 @@ export default class Login extends Component {
   constructor(props) {
         super(props);
         this.loginin=this.loginin.bind(this);
-        this.regist=this.regist.bind(this);
         navigation=this.props.navigation;
         this.state = {
                 conceal:true,

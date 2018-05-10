@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { StackNavigator } from 'react-navigation';
 import Login from './Login_new'
-import MyChart from './MyChart'
 
 export default class Profile extends PureComponent {
     constructor(props) {
@@ -56,8 +55,8 @@ export default class Profile extends PureComponent {
     }
 
     _onChart = () => {
-        this.props.navigator.push({
-            component: MyChart,
+        this.props.navigator.replace({
+            scene: MyChart,
         })
     }
 
@@ -97,7 +96,7 @@ export default class Profile extends PureComponent {
                     <ProfileStaticCell
                         title="专注统计"
                         imageName={require('../resource/ic_my_photos.png')}
-                        onPress={this._onChart}
+                        onPress={()=>navigate('Chart')}
                     />
                     <ProfileStaticCell
                         title="专注排名"
