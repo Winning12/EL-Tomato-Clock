@@ -17,12 +17,12 @@ export default class Register extends Component {
   static navigationOptions = {
     headerTitle: 
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
-        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
+        <Text style={{color: '#686868',fontSize:20}}>注册</Text>
       </View>,
     headerRight:      
     <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
     </View>,
-    headerTintColor:'rgb(222,148,151)',
+    headerTintColor:'#686868',
   };
 
   constructor(props) {
@@ -107,7 +107,7 @@ export default class Register extends Component {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_changed.png')}
+          source={require('../resource/Back_login.png')}
           resizeMode="cover">
 
         <View
@@ -191,12 +191,12 @@ const styles = StyleSheet.create({
   input: {
     width: 200,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   input_pw: {
     width: 180,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   inputBox: {
     flexDirection: 'row',
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     opacity:0.9,
   },
   btText: {
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   header: {
     flexDirection: 'row',

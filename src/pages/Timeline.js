@@ -5,6 +5,7 @@ import {
     FlatList,
     ToastAndroid,
     Image,
+    ImageBackground,
     TouchableOpacity,
     Text,
     View,
@@ -43,7 +44,7 @@ export default class TimeLine extends Component {
                     <View style={styles.left}>
                     </View>
                     <View style={styles.center}>
-                        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>时间线</Text>
+                        <Text style={{color: '#585858',fontSize:20}}>时间线</Text>
                     </View>
                     <View style={styles.right}>
                     <TouchableOpacity
@@ -67,7 +68,7 @@ export default class TimeLine extends Component {
 
                     ListFooterComponent={
                         <View style={{alignItems: 'center',backgroundColor:'white'}}>
-                        <Text style={{color: 'rgb(222,148,151)',fontSize:45}}>Loading</Text>
+                        <Text style={{color: '#585858',fontSize:20}}>Loading</Text>
                         </View>
                     }
                 />
@@ -78,10 +79,10 @@ export default class TimeLine extends Component {
                     transparent={this.state.transparent}>
                     <View
                         style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0, 0, 0, 0.3)'}}>
-                        <View style={{borderRadius: 20,height:600,width:375,backgroundColor:'white'}}>
+                        <View style={{borderRadius: 20,height:400,width:300,backgroundColor:'white'}}>
                             <View style={{alignItems: 'flex-end',marginRight:20}}>
                                 <TouchableOpacity  onPress={()=>{this.setState({visible:false})}}>
-                                    <Text style={{marginTop: 15, color:'rgb(222,148,151)'}}>收起</Text>
+                                    <Text style={{marginTop: 15, color:'#585858'}}>收起</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{alignItems: 'center',margin:20}}>
@@ -95,14 +96,11 @@ export default class TimeLine extends Component {
         );
     }
 
-    /**
-     * item
-     * @returns {XML}
-     */
     getView({item}) {
         return (
-            <TouchableOpacity activeOpacity={0.75}
-                              onPress={()=>this.showModal(item)}>
+            <TouchableOpacity 
+            activeOpacity={0.75}
+            onPress={()=>this.showModal(item)}>
                 <View style={styles.item}>
                     {/*左边的图片*/}
                     <Image source={{uri: item.images[0]}} style={styles.image}/>
@@ -118,16 +116,11 @@ export default class TimeLine extends Component {
         )
     };
 
-    /**
-     * @param item
-     * @param index
-     */
     keyExtractor = (item, index) => item.id;
 
     count = 0;
 
     onRefresh = () => {
-        //设置刷新状态为正在刷新
         this.setState({
             refreshing: true,
         });
@@ -144,10 +137,6 @@ export default class TimeLine extends Component {
         }, 1500);
     };
 
-    onEndReached = (info: { distanceFromEnd: number }) => {
-        ToastAndroid.show('已经到底了', ToastAndroid.SHORT);
-
-    };
 
     ItemData(images, title, id) {
         this.images = new Array(images);
@@ -187,6 +176,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 8,
         backgroundColor: 'white',
+        borderColor:'black',
         marginTop: 5,
         marginLeft: 5,
         marginRight: 5,
@@ -206,13 +196,11 @@ const styles = StyleSheet.create({
     },
     right: {
         flex: 1,
-        marginLeft: 18,
         flexDirection: 'column',
         alignItems: 'flex-end',
     },
     center: {
         flex: 1,
-        marginLeft: 18,
         flexDirection: 'column',
         alignItems: 'center',
     },

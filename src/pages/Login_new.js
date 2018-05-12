@@ -17,7 +17,7 @@ export default class Login extends Component {
   static navigationOptions = {
     headerTitle: 
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
-        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>登录</Text>
+        <Text style={{color: '#686868',fontSize:20}}>登录</Text>
       </View>,
     headerRight:
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'flex-end',marginRight:20}}>
@@ -25,10 +25,10 @@ export default class Login extends Component {
         activeOpacity={0.75}
         onPress={() => navigation.navigate('Register')}
         style={{flexDirection:'row',alignItems: 'center'}}>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
+          <Text style={{color: '#686868',fontSize:20}}>注册</Text>
         </TouchableOpacity>
       </View>,
-    headerTintColor:'rgb(222,148,151)',
+    headerTintColor:'#686868',
   };
 
   constructor(props) {
@@ -57,7 +57,7 @@ export default class Login extends Component {
     }
     else{
       //when tested on server,use http://www.clavier.moe
-        fetch('http://118.25.56.186:3000/signin', {
+        fetch('http://118.25.56.186/signin', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ export default class Login extends Component {
   }
 
   loginout(){
-    fetch('http://118.25.56.186:3000/signout', {
+    fetch('http://118.25.56.186/signout', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
@@ -107,7 +107,6 @@ export default class Login extends Component {
     }).then((response) => response.json())
     .then((jsonData) => {
         let loginreturn = jsonData.status;
-        alert(loginreturn);
     })
   }
 
@@ -131,9 +130,14 @@ export default class Login extends Component {
 
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_changed.png')}
+          source={require('../resource/Back_login.png')}
           resizeMode="cover">
-
+        <View style={{marginBottom:30}}>
+          <Image
+            style={{width: 100, height: 100,opacity:0.5}}
+            source={require('../resource/logo.png')}
+          />
+        </View>
         <View
           style={styles.inputBox}>
           <Text
@@ -210,12 +214,12 @@ const styles = StyleSheet.create({
   input: {
     width: 200,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   input_pw: {
     width: 180,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   inputBox: {
     flexDirection: 'row',
@@ -249,7 +253,7 @@ const styles = StyleSheet.create({
     opacity:0.9,
   },
   btText: {
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   header: {
     flexDirection: 'row',

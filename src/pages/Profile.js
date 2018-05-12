@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { StackNavigator } from 'react-navigation';
 import Login from './Login_new'
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 export default class Profile extends PureComponent {
     constructor(props) {
@@ -28,21 +29,23 @@ export default class Profile extends PureComponent {
         .then((result) => {
             this.setState({name:result})
         })
-        if (this.state.name==null){
-            this.setState({name:"未登录"});
-        }
     }
 
     refresh=()=>{
-      this.timer = setTimeout(() => {
-        AsyncStorage.getItem("user")
-        .then((result) => {
-            this.setState({name:result})
-        })
-        if (this.state.name==null){
-            this.setState({name:"未登录"});
+        AsyncStorage.clear();
+        fetch('http://118.25.56.186/signout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
-      },1000)
+        }).then((response) => response.json())
+        .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        if (loginreturn="success"){
+            this.refs.logininfo.show("已经注销用户")
+            this.setState({name:" "})
+        } 
+        })
     }
 
     _onLogin = () => {
@@ -113,11 +116,12 @@ export default class Profile extends PureComponent {
                         onPress={this._onPressStaticCell}
                     />
                     <ProfileStaticCell
-                        title="关于"
+                        title="重置应用状态"
                         imageName={require('../resource/ic_my_right.png')}
                         onPress={this.refresh}
                     />
                 </View>
+                <Toast ref="logininfo" position='top' opacity={0.6}/>
             </View>
         )
     }

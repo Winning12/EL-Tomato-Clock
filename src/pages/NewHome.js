@@ -110,7 +110,10 @@ export default class NewHome extends Component {
 
     render(){
       return(
-        <View style={styles.container}>
+        <ImageBackground
+                style={styles.backgroundImage}
+                source={backIM}
+                resizeMode="cover">
           {this._render()}
           <Toast ref="timeup" position='top' opacity={0.6}/>
           <TextInput
@@ -119,7 +122,7 @@ export default class NewHome extends Component {
              titleTxt={"刚完成了这些..."}
              ensureCallback={name=> ((refreshed=true),this.state.data[i]=((24-m).toFixed(0)+":"+(60-(s-m*60).toFixed(0)))+"  (M:S)"+"        :   "+name)}
           /> 
-        </View>
+          </ImageBackground>
       )
     }
 
@@ -136,20 +139,17 @@ export default class NewHome extends Component {
         }
         display=this.countdown() 
       return ( 
-          <View>  
-            <ImageBackground
-                style={styles.backgroundImage}
-                source={backIM}
-                resizeMode="cover">
+          <View style={styles.center}>  
             <Text style={styles.backspace}> 
             </Text>
             <AnimatedCircularProgress
+            style={{marginTop:30,opacity:0.70}}
             size={220}
-            width={5}
+            width={4}
             fill={(100*1000*s/this.state.duration)}
-            tintColor="#fcb4b0"
+            tintColor="black"
             onAnimationComplete={() => console.log('onAnimationComplete')}
-            backgroundColor="f9d4ca" >
+            backgroundColor="#a3a3a3" >
             {(fill) => (
             <TouchableOpacity style={styles.btn} onPress={this.addPoint.bind(this)}>
               <Text style={styles.counter}>
@@ -163,10 +163,7 @@ export default class NewHome extends Component {
               enableEmptySections = {true}
               style={{margin:20,}}
               dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
-              renderRow={(rowData,sectionId,rowId) => this._renderRow(rowData,rowId)} />
-            </ImageBackground>
-
-            
+              renderRow={(rowData,sectionId,rowId) => this._renderRow(rowData,rowId)} />           
           </View>
 
         )
@@ -178,7 +175,8 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'center',
     margin: 20,
-    color:'#fcb4b0',
+    color:'black',
+    opacity:0.80,
   },
   backspace: {
     fontSize: 0,
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'left',
     margin: 0,
-    color:'rgb(222,148,151)',
+    color:'#979797',
   },
   container: {
     flex: 1,
@@ -214,5 +212,10 @@ const styles = StyleSheet.create({
         //height:gScreen.height
         //backgroundColor:'rgba(0,0,0,0)',
   },
+  center: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    },
 
 });

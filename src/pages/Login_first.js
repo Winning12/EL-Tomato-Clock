@@ -56,7 +56,7 @@ export default class Loginfirst extends Component {
     }
     else{
       //when tested on server,use http://www.clavier.moe
-        fetch('http://118.25.56.186:3000/signin', {
+        fetch('http://118.25.56.186/signin', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ export default class Loginfirst extends Component {
   }
 
   loginout(){
-    fetch('http://118.25.56.186:3000/signout', {
+    fetch('http://118.25.56.186/signout', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
@@ -130,8 +130,15 @@ export default class Loginfirst extends Component {
 
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_changed.png')}
+          source={require('../resource/Back_login.png')}
           resizeMode="cover">
+        
+        <View style={{marginBottom:30}}>
+          <Image
+            style={{width: 100, height: 100,opacity:0.5}}
+            source={require('../resource/logo.png')}
+          />
+        </View>
 
         <View
           style={styles.inputBox}>
@@ -184,7 +191,7 @@ export default class Loginfirst extends Component {
       <View
         style={styles.header}>
           <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:16}}>返回</Text>
+          <Text style={{color: '#686868',fontSize:16}}>返回</Text>
       </View>
 
       <ImageBackground
@@ -209,12 +216,12 @@ const styles = StyleSheet.create({
   input: {
     width: 200,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   input_pw: {
     width: 180,
     height: 40,
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   inputBox: {
     flexDirection: 'row',
@@ -248,7 +255,7 @@ const styles = StyleSheet.create({
     opacity:0.9,
   },
   btText: {
-    color: 'rgb(222,148,151)',
+    color: '#686868',
   },
   header: {
     flexDirection: 'row',

@@ -22,6 +22,7 @@ export default class _Swiper extends Component {
     header: null,
   };
 
+
   render(){
     const { navigate } = this.props.navigation;
     return (
@@ -93,25 +94,25 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#fbcec3',
+      backgroundColor: '#686868',
     },
     slide2: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#fcb4b0',
+      backgroundColor: '#686868',
     },
     slide3: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#ff9b9f',
+      backgroundColor: '#686868',
     },
     slide4: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fc888d',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#686868',
     },
     text: {
       color: '#fff',
@@ -134,6 +135,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     btText: {
-        color:  '#ff9b9f',
+        color:  '#686868',
     },
   })

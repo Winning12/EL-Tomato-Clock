@@ -6,13 +6,79 @@ import {
   Text,
   View,
   Image,
+  AsyncStorage,
 } from 'react-native';
 
-import TabNavigator from 'react-native-tab-navigator';
+import {TabNavigator,TabBarBottom} from 'react-navigation';  
 import HomePage from './NewHome';
 import TimeLine from './Timeline';
 import My from './My';
 import PropTypes from 'prop-types';
+import TabBarItem  from '../components/TabBarItem'
+
+const Tab = TabNavigator(  
+  {  
+    Home:{  
+      screen:HomePage,  
+      navigationOptions:({navigation}) => ({  
+        tabBarLabel:'番茄时钟',  
+        tabBarIcon:({focused,tintColor}) => (  
+          <TabBarItem  
+            tintColor={tintColor}  
+            focused={focused}  
+            normalImage={require('../resource/ic_tomato.png')}  
+            selectedImage={require('../resource/ic_tomato.png')}  
+          />  
+        )  
+      }),  
+    },  
+  
+    TimeLine:{  
+          screen:TimeLine,  
+          navigationOptions:({navigation}) => ({  
+          tabBarLabel:'时间线',  
+          tabBarIcon:({focused,tintColor}) => (  
+            <TabBarItem  
+             tintColor={tintColor}  
+              focused={focused}  
+              normalImage={require('../resource/ic_timeline.png')}  
+              selectedImage={require('../resource/ic_timeline.png')}  
+            />  
+          )  
+        }),  
+      },  
+    Mine:{  
+        screen:My,  
+        navigationOptions:({navigation}) => ({  
+        tabBarLabel:'我的',  
+        tabBarIcon:({focused,tintColor}) => (  
+          <TabBarItem  
+           tintColor={tintColor}  
+            focused={focused}  
+            normalImage={require('../resource/ic_tab_my.png')}  
+            selectedImage={require('../resource/ic_tab_my.png')}  
+          />  
+        )  
+      }),  
+    },  
+  },{ 
+      tabBarComponent:TabBarBottom,  
+      tabBarPosition:'bottom',  
+      swipeEnabled:true,  
+      animationEnabled:true,  
+      lazy:false,  
+      showIcon:true,
+      tabBarOptions:{  
+        activeTintColor:'#585858',  
+        inactiveTintColor:'#d2d2d2',  
+        style:{backgroundColor:'#ffffff',},  
+        labelStyle: {  
+              fontSize: 10, 
+          },  
+      }  
+    }  
+  );  
+
 
 type Props = {};
 export default class BaseTab extends Component<Props> {
@@ -36,45 +102,25 @@ export default class BaseTab extends Component<Props> {
       return ""
   }
 
-
-
-  _renderTabarItems(selectedTab,icon,selectedIcon,Component){
-    return (
-      <TabNavigator.Item
-          selected={this.state.selectedTab === selectedTab}  
-          title={selectedTab} 
-          titleStyle={styles.tabText}  
-          selectedTitleStyle={styles.selectedTabText}  
-          badgeText={this._badgeText(selectedTab)}
-          renderIcon={() => <Image style={styles.icon} source={icon} />}  
-          renderSelectedIcon={() => <Image style={styles.icon} source={selectedIcon} />}  
-          onPress={() => this.setState({ selectedTab: selectedTab })}
-      >
-          <Component />
-      </TabNavigator.Item>
-    )
+  componentWillMount(){
+    AsyncStorage.setItem('ifFirst',"false"); 
   }
+
+  
+
   render() {
     return (
-      <View style={styles.container} >  
-                <TabNavigator>  
-                 {this._renderTabarItems('番茄时钟',require('../resource/ic_tab_homepage.png'),require('../resource/ic_tab_homepage_select.png'),HomePage)}
-                 {this._renderTabarItems('时间线',require('../resource/ic_tab_search.png'),require('../resource/ic_tab_search_select.png'),TimeLine)}
-                 {this._renderTabarItems('我的',require('../resource/ic_tab_my.png'),require('../resource/ic_tab_my_select.png'),My)}
-                </TabNavigator>  
-            </View>
+      <Tab />
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container:{
     flex:1,
     backgroundColor:'#fff'
-  },
-  tabText:{
-    color:'#000000',
-    fontSize:10
   },
   selectedTabText:{
     color:'#D81E06'
