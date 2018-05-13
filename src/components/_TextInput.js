@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         opacity:0.9,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: 'rgb(222,148,151)',
+        borderColor: '#a3a3a3',
         borderWidth: 1,
         height: 150,
         width: screenW * 0.75,

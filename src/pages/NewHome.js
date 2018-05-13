@@ -25,6 +25,8 @@ import TextInput from '../components/_TextInput'
     var Prevtime=0
     var se=0
     var retnormal=false
+    var hours=0
+    var minutes=0
 } 
 
 export default class NewHome extends Component {
@@ -38,8 +40,14 @@ export default class NewHome extends Component {
             dataSource:ds,
             data:[],
             time1:(new Date()).valueOf()+25*60*1000,
-            name:"请输入所完成的任务",
-            duration:15*60*1000
+            name:"完成了：",
+            duration:15*60*1000,
+            hour:0,
+            minute:0,
+            uploadData:"",
+            year:(new Date()).getFullYear()+"",
+            month:((new Date()).getMonth()+1)+"",
+            day:(new Date()).getDay()+"",
         };
     }
 
@@ -68,17 +76,7 @@ export default class NewHome extends Component {
           if  (display=="再次\n开始")
             return "再次\n开始"
           else
-            this.timer = setTimeout(() => {
-              retnormal=true
-            }, 3000)
-            if(retnormal==true){
-              pause=false//防止重复回调
-              se=(s-m*60)
-              retnormal=false
-              if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
               return ((m)+":"+Math.floor(se))
-            }else
-              return "记录\n日程..."
          }
         /*}
         else{
@@ -114,16 +112,66 @@ export default class NewHome extends Component {
                 style={styles.backgroundImage}
                 source={backIM}
                 resizeMode="cover">
+          {this._renderShareButton()}
           {this._render()}
-          <Toast ref="timeup" position='top' opacity={0.6}/>
+          {this.getTime()}
+          <Toast ref="timeup" position='top' opacity={0.9}/>
           <TextInput
              ref={editView => this.editView = editView}
              inputText={this.state.name}
              titleTxt={"刚完成了这些..."}
-             ensureCallback={name=> ((refreshed=true),this.state.data[i]=((24-m).toFixed(0)+":"+(60-(s-m*60).toFixed(0)))+"  (M:S)"+"        :   "+name)}
+             ensureCallback={name=> (
+               (refreshed=true),
+               this.state.data[i]=(this.state.hour+"时"+this.state.minute+"分"+"       "+name),
+               this.state.uploadData+=this.state.data[i]+"\n"
+               )}
           /> 
           </ImageBackground>
       )
+    }
+
+    upload(){
+      fetch('http://118.25.56.186/data/create', {
+        method: 'POST',
+        headers: {
+              'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+              length:"1500",
+              name:this.state.uploadData,
+              year:this.state.year,
+              month:this.state.month,
+              day:this.state.day,
+              hour:this.state.hour,
+              min:this.state.minute,
+        })
+      }).then((response) => response.json())
+      .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        alert(loginreturn);
+    })
+    }
+
+    clearData(){
+      this.setState({data:[]})
+      this.state.uploadData=""
+    }
+
+    getTime(){
+      hours=(new Date()).getHours()
+      if(hours<10){
+        this.state.hour='0'+hours
+      }
+      else{
+        this.state.hour=""+hours
+      }
+      minutes=(new Date()).getMinutes()
+      if(minutes<10){
+        this.state.minute='0'+minutes
+      }
+      else{
+        this.state.minute=""+minutes
+      }
     }
 
     _renderRow(rowData,rowId){
@@ -131,6 +179,39 @@ export default class NewHome extends Component {
        <Text style={styles.recorder}>{rowData}</Text>
        )
       }
+     
+    _renderShareButton(){
+      if (this.state.uploadData!=""){
+      return(
+        <View style={styles.header}>
+          <View style={styles.left}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.buttonContainer}
+            onPress={this.clearData.bind(this)}
+            >
+            <Image source={require('../resource/ic_event_delete.png')}style={{width:30,height:30}}/>
+          </TouchableOpacity>  
+          </View>
+          <View style={styles.right}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.buttonContainer}
+            onPress={this.upload.bind(this)}
+            >
+            <Image source={require('../resource/ic_news_share.png')}style={{width:30,height:30}}/>
+          </TouchableOpacity>  
+          </View>
+        </View>
+        )
+      }else{
+      return(
+        <View style={styles.header}>
+
+        </View>
+          )
+      }
+    }
 
     _render() {
         if (refreshed==true){
@@ -143,7 +224,7 @@ export default class NewHome extends Component {
             <Text style={styles.backspace}> 
             </Text>
             <AnimatedCircularProgress
-            style={{marginTop:30,opacity:0.70}}
+            style={{opacity:0.70}}
             size={220}
             width={4}
             fill={(100*1000*s/this.state.duration)}
@@ -158,14 +239,12 @@ export default class NewHome extends Component {
             </TouchableOpacity>
             )}
             </AnimatedCircularProgress>
-           
             <ListView
               enableEmptySections = {true}
               style={{margin:20,}}
               dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
-              renderRow={(rowData,sectionId,rowId) => this._renderRow(rowData,rowId)} />           
+              renderRow={(rowData,sectionId,rowId) => this._renderRow(rowData,rowId)} /> 
           </View>
-
         )
     }
 }
@@ -178,12 +257,18 @@ const styles = StyleSheet.create({
     color:'black',
     opacity:0.80,
   },
+  header: {
+    flexDirection: 'row',
+    height: 30,
+    marginTop:5,
+    alignItems: 'center'
+  },
   backspace: {
     fontSize: 0,
     textAlign: 'center',
     margin: 15,
   },
-    recorder: {
+  recorder: {
     fontSize: 20,
     textAlign: 'left',
     margin: 0,
@@ -204,7 +289,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     opacity:1,
   },
- backgroundImage:{
+  buttonContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderWidth: 0,
+    borderRadius: 2
+  },
+  backgroundImage:{
         flex:1,
         alignItems:'center',
         justifyContent:'center',
@@ -216,6 +307,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    },
+  },
+  right: {
+    flex:1,
+    marginTop:10,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  left: {
+    flex:1,
+    marginTop:10,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
 
 });

@@ -16,9 +16,7 @@ import {
 var displayTitle="null"
 var imgsrc=""
 export default class TimeLine extends Component {
-    static defaultProps = {
-        url: 'https://news-at.zhihu.com/api/4/news/latest'
-    };
+
 
     constructor(props) {
         super(props);
@@ -28,12 +26,14 @@ export default class TimeLine extends Component {
             data: [],
             refreshing: false,
             transparent:true,
+            year:(new Date()).getFullYear(),
+            month:(new Date()).getMonth()+1,
+            day:(new Date()).getDay(),
         };
     }
 
     showModal(item){
-        displayTitle=item.title
-        imgsrc=item.images[0]
+        displayTitle=item.name
         this.setState({visible:true});
     }
 
@@ -68,7 +68,7 @@ export default class TimeLine extends Component {
 
                     ListFooterComponent={
                         <View style={{alignItems: 'center',backgroundColor:'white'}}>
-                        <Text style={{color: '#585858',fontSize:20}}>Loading</Text>
+                        <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
                         </View>
                     }
                 />
@@ -103,12 +103,12 @@ export default class TimeLine extends Component {
             onPress={()=>this.showModal(item)}>
                 <View style={styles.item}>
                     {/*左边的图片*/}
-                    <Image source={{uri: item.images[0]}} style={styles.image}/>
+                    {/*<Image source={{uri: item.images[0]}} style={styles.image}/>*/}
                     <View style={styles.left}>
                         {/*右边的View*/}
-                        <Text style={{marginTop: 15, color: '#333333'}}>{item.title}</Text>
+                        <Text style={{marginTop: 15, color: '#333333'}}>{item.name}</Text>
                         <View style={styles.content}>
-                            <Text style={{flex: 1, textAlign: 'right'}}>{item.id + ''}</Text>
+                            <Text style={{flex: 1, textAlign: 'right'}}>{item.like + ''}</Text>
                         </View>
                     </View>
                 </View>
@@ -121,21 +121,24 @@ export default class TimeLine extends Component {
     count = 0;
 
     onRefresh = () => {
-        this.setState({
-            refreshing: true,
-        });
-        //延时加载
-        const timer = setTimeout(() => {
-            clearTimeout(timer);
-            //往数组的第一位插入数据，模拟数据新增 , unshift()会返回数组的长度
-            this.state.data.unshift(new this.ItemData('https://pic2.zhimg.com/v2-8f11b41f995ca5340510c1def1c003d1.jpg',
-                '下拉刷新添加的数据——————' + this.count, 475843));
-            this.count++;
-            this.setState({
-                refreshing: false,
+        fetch('http://118.25.56.186/data', {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
+            .then((response) => {
+                var json = response;
+                this.setState({
+                    data: json,
+                });
+            })
+            .catch((error) => {
+                if (error) {
+                    console.log('error', error);
+                }
             });
-        }, 1500);
-    };
+    }
 
 
     ItemData(images, title, id) {
@@ -145,10 +148,14 @@ export default class TimeLine extends Component {
     }
 
     componentDidMount() {
-        fetch(this.props.url)
-            .then((response) => response.json())
+        fetch('http://118.25.56.186/data/', {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
             .then((response) => {
-                var json = response['stories'];
+                var json = response;
                 this.setState({
                     data: json,
                 });

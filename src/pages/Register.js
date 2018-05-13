@@ -53,7 +53,7 @@ export default class Register extends Component {
         this.refs.logininfo.show("两次输入密码不一致！")
       }
       else{
-        fetch('http://192.168.1.100:3000/signup', {
+        fetch('http://118.25.56.186/signup', {
         method: 'POST',
         headers: {
               'Content-Type': 'application/json'
