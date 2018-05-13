@@ -13,7 +13,7 @@ import {
 import My from './My'
 import Toast, {DURATION} from 'react-native-easy-toast'
 
-export default class Register extends Component {
+export default class RegisterFirst extends Component {
 
   static navigationOptions = {
     headerTitle: 
@@ -75,7 +75,7 @@ export default class Register extends Component {
             else{
               AsyncStorage.setItem('user',this.state.name); 
               this.refs.logininfo.show("注册成功");
-              this.props.navigation.replace('Home');
+              this.props.navigation.replace('BaseTab');
             }
         })
       }

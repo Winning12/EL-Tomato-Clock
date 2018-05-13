@@ -8,10 +8,10 @@ import {
     ImageBackground,
     TouchableOpacity,
     Text,
-    View,
     Modal,
     Button
 } from 'react-native';
+import { createAnimatableComponent, View} from 'react-native-animatable'
 
 var displayTitle="null"
 var imgsrc=""
@@ -28,14 +28,11 @@ export default class TimeLine extends Component {
             transparent:true,
             year:(new Date()).getFullYear(),
             month:(new Date()).getMonth()+1,
-            day:(new Date()).getDay(),
+            day:(new Date()).getDate(),
+            opacity:0.7,
         };
     }
 
-    showModal(item){
-        displayTitle=item.name
-        this.setState({visible:true});
-    }
 
     render() {
         return (
@@ -67,8 +64,9 @@ export default class TimeLine extends Component {
                     refreshing={this.state.refreshing}
 
                     ListFooterComponent={
-                        <View style={{alignItems: 'center',backgroundColor:'white'}}>
+                        <View style={{borderRadius:8,marginTop:5,alignItems: 'center',backgroundColor:'white'}}>
                         <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
+                        <Text style={{color: '#585858',fontSize:20}}>请下拉以尝试刷新</Text>
                         </View>
                     }
                 />
@@ -96,25 +94,95 @@ export default class TimeLine extends Component {
         );
     }
 
+    showModal(item){
+        displayTitle=item.name
+        this.setState({visible:true});
+    }
+
     getView({item}) {
         return (
+            <View animation='fadeIn' useNativeDriver>
             <TouchableOpacity 
             activeOpacity={0.75}
             onPress={()=>this.showModal(item)}>
                 <View style={styles.item}>
-                    {/*左边的图片*/}
-                    {/*<Image source={{uri: item.images[0]}} style={styles.image}/>*/}
-                    <View style={styles.left}>
-                        {/*右边的View*/}
-                        <Text style={{marginTop: 15, color: '#333333'}}>{item.name}</Text>
-                        <View style={styles.content}>
-                            <Text style={{flex: 1, textAlign: 'right'}}>{item.like + ''}</Text>
+                    <View style={{alignItems: 'center',flexDirection:'row'}}>
+                    <View style={styles.avatarContainer}>
+                        <Image
+                        style={{width: 35, height: 35}}
+                        source={require('../resource/my_avatar.png')}
+                        />
+                    </View>
+                    <Text style={{marginLeft:10,fontSize:20}}>{item.author.name + ''}</Text>
+                    </View>
+                    <View style={{marginLeft:50}}>
+                        <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemName(item)}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
+                        <Text style={{ color: '#a8a8a8',fontSize:15}}>{this.handleItemDate(item)}</Text>
+                        <View style={{justifyContent:'center',alignItems: 'flex-end',flex: 1,marginRight:20}}>
+                            <TouchableOpacity 
+                            activeOpacity={0.5}
+                            onPress={()=>this.doLike(item)}>
+                                <View style={{opacity:this.state.opacity,flexDirection:'row',borderRadius:5,borderWidth:1,borderColor:'#c8c8c8'}}>
+                                    <Image style={{margin:3,width:20,height:20}} source={require('../resource/ic_feed_like.png')}/>
+                                    <Text style={{margin:3}}>{item.like + ''}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </TouchableOpacity>
+            </View>
         )
     };
+
+    handleItemDate(item){
+        if(item.year==this.state.year){
+            if(item.month==this.state.month){
+                if(item.day==this.state.day)
+                    return "今天    "+item.hour+"时"+item.min+"分发布"
+                else
+                    return item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+            }
+            else 
+                return item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+        }
+        else
+            return item.year+"年"+item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+    }
+
+    handleItemName(item){
+        var count=0;
+        var res="";
+        for (i=0;i<item.name.length;i++){
+            if (item.name[i]=='\n'){
+                count++;
+            }
+            if(count>=2){
+                res+='\n'+'…………'
+                break;
+            }
+            res+=item.name[i];
+        }
+        return res;
+    }
+
+    doLike(item){
+        fetch('http://118.25.56.186/data/'+item._id+'/dolike', {
+        method: 'GET',
+        headers: {
+              'Content-Type': 'application/json'
+        },
+      }).then((response) => response.json())
+      .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        if(loginreturn=="success"){
+          this.setState({opacity:0.7})
+          this.onRefresh()
+        }
+    })
+    }
 
     keyExtractor = (item, index) => item.id;
 
@@ -180,7 +248,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flexWrap: 'wrap',
-        flexDirection: 'row',
+        flexDirection: 'column',
         borderRadius: 8,
         backgroundColor: 'white',
         borderColor:'black',
@@ -201,6 +269,15 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
+    avatarContainer: {
+        marginLeft:10,
+        width: 40,
+        height: 40,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     right: {
         flex: 1,
         flexDirection: 'column',
@@ -214,13 +291,12 @@ const styles = StyleSheet.create({
     content: {
         bottom: 10,
         marginRight: 16,
-        position: 'absolute',
         flexDirection: 'row',
         justifyContent: 'flex-end',
     },
     header: {
         flexDirection: 'row',
-        height: 60,
+        height: 50,
         backgroundColor:'rgb(248,248,248)',
         alignItems: 'center',
     },

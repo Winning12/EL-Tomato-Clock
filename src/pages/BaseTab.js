@@ -65,7 +65,7 @@ const Tab = TabNavigator(
       tabBarComponent:TabBarBottom,  
       tabBarPosition:'bottom',  
       swipeEnabled:true,  
-      animationEnabled:true,  
+      animationEnabled:false,  
       lazy:true,  
       showIcon:true,
       tabBarOptions:{  

@@ -47,7 +47,7 @@ export default class NewHome extends Component {
             uploadData:"",
             year:(new Date()).getFullYear()+"",
             month:((new Date()).getMonth()+1)+"",
-            day:(new Date()).getDay()+"",
+            day:(new Date()).getDate()+"",
         };
     }
 
