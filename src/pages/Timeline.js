@@ -44,7 +44,7 @@ export default class TimeLine extends Component {
                     <View style={styles.left}>
                     </View>
                     <View style={styles.center}>
-                        <Text style={{color: '#585858',fontSize:20}}>时间线</Text>
+                        <Text style={{color: '#585858',fontSize:20}}>时间线 </Text>
                     </View>
                     <View style={styles.right}>
                     <TouchableOpacity

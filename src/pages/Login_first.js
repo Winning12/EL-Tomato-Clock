@@ -1,34 +1,34 @@
 import React, { Component } from 'react'
 import { 
     Image,
-    View,
+    Text,
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    Text,
     ImageBackground,
     InteractionManager,
     AsyncStorage,
     } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { StackNavigator } from 'react-navigation';
+import { createAnimatableComponent, View} from 'react-native-animatable'
 
 export default class Loginfirst extends Component {
   static navigationOptions = {
     headerTitle: 
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
-        <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>登录</Text>
+        <Text style={{color: '#686868',fontSize:20}}>登录</Text>
       </View>,
     headerRight:
-      <View style={{flex: 1,flexDirection: 'column',alignItems: 'flex-end',marginRight:20}}>
+      <View  style={{flex: 1,flexDirection: 'column',alignItems: 'flex-end',marginRight:20}}>
         <TouchableOpacity
         activeOpacity={0.75}
         onPress={() => navigation.navigate('Register')}
         style={{flexDirection:'row',alignItems: 'center'}}>
-          <Text style={{color: 'rgb(222,148,151)',fontSize:20}}>注册</Text>
+          <Text style={{color: '#686868',fontSize:20}}>注册</Text>
         </TouchableOpacity>
       </View>,
-    headerTintColor:'rgb(222,148,151)',
+    headerTintColor:'#686868',
   };
 
   constructor(props) {
@@ -141,7 +141,9 @@ export default class Loginfirst extends Component {
         </View>
 
         <View
-          style={styles.inputBox}>
+          animation='fadeInLeft'
+          style={styles.inputBox}
+          useNativeDriver>
           <Text
             style={styles.btText}>用户名</Text>
           <TextInput
@@ -151,7 +153,10 @@ export default class Loginfirst extends Component {
         </View>
 
         <View
-          style={styles.inputBox}>
+          animation='fadeInLeft'
+          delay={50}
+          style={styles.inputBox}
+          useNativeDriver>
            <Text
             style={styles.btText}>   密码   </Text>
           <TextInput
@@ -165,19 +170,30 @@ export default class Loginfirst extends Component {
         </TouchableOpacity>
         </View>
 
-
+        
+        <View
+          animation='fadeInLeft'
+          delay={100}
+          useNativeDriver>
         <TouchableOpacity
           style={styles.button}
           onPress={this.loginin}>
           <Text
             style={styles.btText}>登录</Text>
         </TouchableOpacity>
+        </View>
+                
+        <View
+          animation='fadeInLeft'
+          delay={150}
+          useNativeDriver>
         <TouchableOpacity
           style={styles.button}
           onPress={()=>{this.refs.logininfo.show("联系开发者：\nQQ：1009670650 \n邮箱：wenhao_jun@outlook.com",1500)}}>
           <Text
             style={styles.btText}>登录遇到问题，需要帮助</Text>
         </TouchableOpacity>
+        </View>
     </ImageBackground>
       <Toast ref="logininfo" position='top' opacity={0.6}/>
     </View>

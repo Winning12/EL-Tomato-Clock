@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import {
     StyleSheet,
     ListView,
-    View,
     Image,
     ImageBackground,
-    Text,
     TouchableOpacity,
     TouchableHighlight,
     NativeModules,
-    AppState
+    AppState,
+    Alert
 } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import TextInput from '../components/_TextInput'
+import { createAnimatableComponent, View, Text } from 'react-native-animatable'
 
 {
     var display="开始"
@@ -148,7 +148,11 @@ export default class NewHome extends Component {
       }).then((response) => response.json())
       .then((jsonData) => {
         let loginreturn = jsonData.status;
-        alert(loginreturn);
+        if(loginreturn=="success"){
+          Alert.alert("分享成功","将被显示在时间线上",[
+            {text: '确定', onPress: ()=> console.log('点击确定')}
+        ])
+        }
     })
     }
 
@@ -184,7 +188,8 @@ export default class NewHome extends Component {
       if (this.state.uploadData!=""){
       return(
         <View style={styles.header}>
-          <View style={styles.left}>
+          <View animation="bounceIn" style={styles.left} useNativeDriver>
+            {/*Xue:如果为ios,请移除useNativeDriver*/}
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonContainer}
@@ -193,7 +198,7 @@ export default class NewHome extends Component {
             <Image source={require('../resource/ic_event_delete.png')}style={{width:30,height:30}}/>
           </TouchableOpacity>  
           </View>
-          <View style={styles.right}>
+          <View animation="bounceIn" style={styles.right} useNativeDriver>
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonContainer}
@@ -220,9 +225,7 @@ export default class NewHome extends Component {
         }
         display=this.countdown() 
       return ( 
-          <View style={styles.center}>  
-            <Text style={styles.backspace}> 
-            </Text>
+          <View animation="fadeIn" style={styles.center}>  
             <AnimatedCircularProgress
             style={{opacity:0.70}}
             size={220}

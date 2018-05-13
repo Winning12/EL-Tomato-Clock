@@ -1,7 +1,6 @@
 import React, {PureComponent} from 'react'
 import {
     StyleSheet,
-    View,
     TouchableOpacity,
     Text,
     ImageBackground,
@@ -11,6 +10,7 @@ import {
 import { StackNavigator } from 'react-navigation';
 import Login from './Login_new'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import {createAnimatableComponent, View,} from 'react-native-animatable'
 
 export default class Profile extends PureComponent {
     constructor(props) {
@@ -104,21 +104,28 @@ export default class Profile extends PureComponent {
                         title="专注统计"
                         imageName={require('../resource/ic_my_photos.png')}
                         onPress={()=>navigate('Chart')}
+                        anima='fadeInLeft'
                     />
                     <ProfileStaticCell
                         title="专注排名"
                         imageName={require('../resource/ic_my_collect.png')}
                         onPress={this._onPressStaticCell}
+                        anima='fadeInLeft'
+                        delay={50}
                     />
                     <ProfileStaticCell
                         title="我的收藏"
                         imageName={require('../resource/ic_my_upload.png')}
                         onPress={this._onPressStaticCell}
+                        anima='fadeInLeft'
+                        delay={100}
                     />
                     <ProfileStaticCell
                         title="重置应用状态"
                         imageName={require('../resource/ic_my_right.png')}
                         onPress={this.refresh}
+                        anima='fadeInLeft'
+                        delay={150}
                     />
                 </View>
                 <Toast ref="logininfo" position='top' opacity={0.6}/>
@@ -132,9 +139,12 @@ const ProfileStaticCell = ({
     title,
     imageName,
     style,
-    onPress
+    onPress,
+    anima,
+    delay
 }) => {
     return (
+        <View animation={anima} delay={delay} useNativeDriver>
         <TouchableOpacity
             activeOpacity={0.75}
             style={styles.staticCell}
@@ -146,6 +156,7 @@ const ProfileStaticCell = ({
                 <Image style={{width: 20, height: 20}} source={require('../resource/ic_my_right.png')}/>
             </View>
         </TouchableOpacity>
+        </View>
     )
 }
 
