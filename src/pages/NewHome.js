@@ -41,7 +41,7 @@ export default class NewHome extends Component {
             data:[],
             time1:(new Date()).valueOf()+25*60*1000,
             name:"完成了：",
-            duration:15*60*1000,
+            duration:25*60*1000,
             hour:0,
             minute:0,
             uploadData:"",

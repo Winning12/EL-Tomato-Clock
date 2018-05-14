@@ -80,6 +80,7 @@ export default class Login extends Component {
             else{
               if (loginreturn=="error"){
                 AsyncStorage.setItem('user',this.state.name); 
+                AsyncStorage.setItem('logined',"true");
                 this.refs.logininfo.show("已经登录");
                 this.timer = setTimeout(() => {
                   this.props.navigation.replace("Home");
@@ -88,6 +89,7 @@ export default class Login extends Component {
               
               else{
                 AsyncStorage.setItem('user',this.state.name); 
+                AsyncStorage.setItem('logined',"true");
                 this.refs.logininfo.show("登录成功");
                 this.timer = setTimeout(() => {
                   this.props.navigation.replace("Home");

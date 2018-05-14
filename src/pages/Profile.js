@@ -17,6 +17,7 @@ export default class Profile extends PureComponent {
         super(props);
         this.state = {
                 name:"",
+                logined:false,
         };
     }
     
@@ -28,6 +29,13 @@ export default class Profile extends PureComponent {
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({name:result})
+        })
+        AsyncStorage.getItem("logined")
+        .then((result) => {
+            if(result=="true")
+                this.setState({logined:true})
+            else
+                this.setState({logined:false})
         })
     }
 
@@ -43,9 +51,29 @@ export default class Profile extends PureComponent {
         let loginreturn = jsonData.status;
         if (loginreturn="success"){
             this.refs.logininfo.show("已经注销用户")
-            this.setState({name:" "})
+            AsyncStorage.setItem('logined',"false")
+            AsyncStorage.setItem('user',"");
+            this.setState({name:"",logined:false})
         } 
         })
+    }
+
+    loginOut=()=>{
+        fetch('http://118.25.56.186/signout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        }).then((response) => response.json())
+        .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        if (loginreturn="success"){
+            this.refs.logininfo.show("已经注销用户")
+            AsyncStorage.setItem('logined',"false");
+            AsyncStorage.setItem('user',"");
+            this.setState({name:"",logined:false})
+        } 
+    })
     }
 
     _onLogin = () => {
@@ -66,13 +94,88 @@ export default class Profile extends PureComponent {
     _onPressStaticCell = title => alert(title)
 
     render() {
-        const { navigate } = this.props.navigation;
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({name:result})
         })
-        return (
-            <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
+        if(this.state.logined)
+            return (
+           this._render_logined()
+            )
+        else
+            return(
+            this._render_unlogined()
+            )
+    }
+
+    _render_logined(){
+        const { navigate } = this.props.navigation;
+        return(
+             <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
+                <ImageBackground
+                style={{height: 230, alignItems: 'center', backgroundColor: 'transparent'}}
+                source={require('../resource/img_my_head.png')}
+                >
+                    <View style={[styles.header]}>
+                        <Text style={{color: 'white', fontSize: 16}}>{this.state.name}</Text>
+                    </View>
+                    <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                    }}>
+                    <View style={styles.avatarContainer}>
+                        <Image
+                        style={{width: 60, height: 60}}
+                        source={require('../resource/my_avatar.png')}
+                        />
+                    </View>
+                    <TouchableOpacity
+                    activeOpacity={0.75}
+                    style={styles.loginContainer}
+                    onPress={this.loginOut}
+                    >
+                        <Text style={{color: 'white'}}>注销</Text>
+                    </TouchableOpacity>
+            </View>
+        </ImageBackground>
+                <View style={[styles.cellContainer]}>
+                    <ProfileStaticCell
+                        title="专注统计"
+                        imageName={require('../resource/ic_my_photos.png')}
+                        onPress={()=>navigate('Statistic')}
+                        anima='fadeInLeft'
+                    />
+                    <ProfileStaticCell
+                        title="专注排名"
+                        imageName={require('../resource/ic_my_collect.png')}
+                        onPress={()=>navigate("Ranking")}
+                        anima='fadeInLeft'
+                        delay={50}
+                    />
+                    <ProfileStaticCell
+                        title="我的分享"
+                        imageName={require('../resource/ic_my_upload.png')}
+                        onPress={this._onPressStaticCell}
+                        anima='fadeInLeft'
+                        delay={100}
+                    />
+                    <ProfileStaticCell
+                        title="重置应用"
+                        imageName={require('../resource/ic_my_right.png')}
+                        onPress={this.refresh}
+                        anima='fadeInLeft'
+                        delay={150}
+                    />
+                </View>
+                <Toast ref="logininfo" position='top' opacity={0.6}/>
+            </View>
+        )
+    }
+
+    _render_unlogined(){
+        const { navigate } = this.props.navigation;
+        return(
+             <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
                 <ImageBackground
                 style={{height: 230, alignItems: 'center', backgroundColor: 'transparent'}}
                 source={require('../resource/img_my_head.png')}
@@ -103,25 +206,25 @@ export default class Profile extends PureComponent {
                     <ProfileStaticCell
                         title="专注统计"
                         imageName={require('../resource/ic_my_photos.png')}
-                        onPress={()=>navigate('Chart')}
+                        onPress={()=>navigate('Statistic')}
                         anima='fadeInLeft'
                     />
                     <ProfileStaticCell
                         title="专注排名"
                         imageName={require('../resource/ic_my_collect.png')}
-                        onPress={this._onPressStaticCell}
+                        onPress={()=>navigate("Ranking")}
                         anima='fadeInLeft'
                         delay={50}
                     />
                     <ProfileStaticCell
-                        title="我的收藏"
+                        title="我的分享"
                         imageName={require('../resource/ic_my_upload.png')}
                         onPress={this._onPressStaticCell}
                         anima='fadeInLeft'
                         delay={100}
                     />
                     <ProfileStaticCell
-                        title="重置应用状态"
+                        title="重置应用"
                         imageName={require('../resource/ic_my_right.png')}
                         onPress={this.refresh}
                         anima='fadeInLeft'

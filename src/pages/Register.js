@@ -74,8 +74,11 @@ export default class Register extends Component {
             }
             else{
               AsyncStorage.setItem('user',this.state.name); 
+              AsyncStorage.setItem('logined',"true");
               this.refs.logininfo.show("注册成功");
-              this.props.navigation.replace('Home');
+              this.timer = setTimeout(() => {
+                this.props.navigation.replace('Home');
+              }, 1000)
             }
         })
       }

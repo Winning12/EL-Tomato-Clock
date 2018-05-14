@@ -10,8 +10,9 @@ import {
     } from 'react-native'
 import Login from './Login_new'
 import Register from './Register'
-import MyChart from './MyChart'
+import Statistic from './Statistic'
 import Profile from './Profile'
+import Ranking from './Ranking'
 import { StackNavigator } from 'react-navigation';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
@@ -29,7 +30,8 @@ export const ProfileRoutes = StackNavigator({
   Home: { screen: Profile },
   Login: { screen : Login},
   Register: { screen : Register},
-  Chart:  {screen:MyChart},
+  Statistic:  {screen:Statistic},
+  Ranking: {screen:Ranking},
   }, {
       transitionConfig: TransitionConfiguration,
 });

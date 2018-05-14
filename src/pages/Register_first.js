@@ -74,8 +74,11 @@ export default class RegisterFirst extends Component {
             }
             else{
               AsyncStorage.setItem('user',this.state.name); 
+              AsyncStorage.setItem('logined',"true");
               this.refs.logininfo.show("注册成功");
-              this.props.navigation.replace('BaseTab');
+              this.timer = setTimeout(() => {
+                this.props.navigation.replace('BaseTab');
+              }, 1000)
             }
         })
       }
