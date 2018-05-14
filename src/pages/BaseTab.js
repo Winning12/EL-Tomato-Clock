@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import {TabNavigator,TabBarBottom} from 'react-navigation';  
-import HomePage from './NewHome';
+import HomePage from './Home';
 import TimeLine from './Timeline';
 import My from './My';
 import PropTypes from 'prop-types';

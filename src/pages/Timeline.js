@@ -9,18 +9,23 @@ import {
     TouchableOpacity,
     Text,
     Modal,
-    Button
+    Button,
+    AsyncStorage
 } from 'react-native';
 import { createAnimatableComponent, View} from 'react-native-animatable'
 
 var displayTitle="null"
 var imgsrc=""
+var i=0
 export default class TimeLine extends Component {
 
 
     constructor(props) {
         super(props);
         this.getView=this.getView.bind(this)
+        this.doLike=this.doLike.bind(this)
+        this.unLike=this.unLike.bind(this)
+        this.showLike=this.showLike.bind(this)
         this.state = {
             visible:false,
             data: [],
@@ -30,9 +35,16 @@ export default class TimeLine extends Component {
             month:(new Date()).getMonth()+1,
             day:(new Date()).getDate(),
             opacity:0.7,
+            name:"",
         };
     }
 
+    componentWillMount(){
+        AsyncStorage.getItem("user")
+        .then((result) => {
+            this.setState({name:result})
+        })
+    }
 
     render() {
         return (
@@ -100,6 +112,7 @@ export default class TimeLine extends Component {
     }
 
     getView({item}) {
+        this.showLike(item)
         return (
             <View animation='fadeIn' useNativeDriver>
             <TouchableOpacity 
@@ -116,17 +129,17 @@ export default class TimeLine extends Component {
                     <Text style={{marginLeft:10,fontSize:20}}>{item.author.name + ''}</Text>
                     </View>
                     <View style={{marginLeft:50}}>
-                        <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemName(item)}</Text>
+                        <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemContent(item)}</Text>
                     </View>
                     <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
                         <Text style={{ color: '#a8a8a8',fontSize:15}}>{this.handleItemDate(item)}</Text>
                         <View style={{justifyContent:'center',alignItems: 'flex-end',flex: 1,marginRight:20}}>
                             <TouchableOpacity 
                             activeOpacity={0.5}
-                            onPress={()=>this.doLike(item)}>
+                            onPress={()=>this.like(item)}>
                                 <View style={{opacity:this.state.opacity,flexDirection:'row',borderRadius:5,borderWidth:1,borderColor:'#c8c8c8'}}>
                                     <Image style={{margin:3,width:20,height:20}} source={require('../resource/ic_feed_like.png')}/>
-                                    <Text style={{margin:3}}>{item.like + ''}</Text>
+                                    <Text style={{margin:3}}>{this.handleLikeNumbers(item) + ''}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -152,20 +165,52 @@ export default class TimeLine extends Component {
             return item.year+"年"+item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
     }
 
-    handleItemName(item){
+    handleItemContent(item){
         var count=0;
         var res="";
-        for (i=0;i<item.name.length;i++){
-            if (item.name[i]=='\n'){
+        for (i=0;i<item.content.length;i++){
+            if (item.content[i]=='\n'){
                 count++;
             }
             if(count>=2){
                 res+='\n'+'…………'
                 break;
             }
-            res+=item.name[i];
+            res+=item.content[i];
         }
         return res;
+    }
+
+    handleLikeNumbers(item){
+        if(item.likedusers!=undefined)
+            return item.likedusers.length
+        else
+            return 0
+    }
+
+    showLike(item){
+        if(item.likedusers!=undefined){
+            if(item.likedusers.indexOf(this.state.name)==-1){
+                this.state.opacity=0.3
+            }else
+                this.state.opacity=0.8
+        }else
+            this.state.opacity=0.3
+    }
+
+    like(item){
+        AsyncStorage.getItem("user")
+        .then((result) => {
+            this.state.name=result
+        })
+        if(item.likedusers!=undefined){
+            if(item.likedusers.indexOf(this.state.name)==-1){
+                this.doLike(item)
+            }else
+                this.unLike(item)
+        }   
+        else
+            this.doLike(item)
     }
 
     doLike(item){
@@ -182,6 +227,22 @@ export default class TimeLine extends Component {
           this.onRefresh()
         }
     })
+    }
+
+    unLike(item){
+        fetch('http://118.25.56.186/data/'+item._id+'/undolike', {
+        method: 'GET',
+        headers: {
+              'Content-Type': 'application/json'
+        },
+      }).then((response) => response.json())
+      .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        if(loginreturn=="success"){
+          this.setState({opacity:0.7})
+          this.onRefresh()
+        }
+        })
     }
 
     keyExtractor = (item, index) => item.id;

@@ -8,7 +8,8 @@ import {
     TouchableHighlight,
     NativeModules,
     AppState,
-    Alert
+    AsyncStorage,
+    Alert,
 } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
@@ -29,7 +30,7 @@ import { createAnimatableComponent, View, Text } from 'react-native-animatable'
     var minutes=0
 } 
 
-export default class NewHome extends Component {
+export default class Home extends Component {
 
 
    constructor(props) {
@@ -41,14 +42,29 @@ export default class NewHome extends Component {
             data:[],
             time1:(new Date()).valueOf()+25*60*1000,
             name:"完成了：",
-            duration:25*60*1000,
+            duration:1*10*1000,
             hour:0,
             minute:0,
             uploadData:"",
             year:(new Date()).getFullYear()+"",
             month:((new Date()).getMonth()+1)+"",
             day:(new Date()).getDate()+"",
+            tomato:0,
         };
+    }
+
+    componentDidMount() {
+      AsyncStorage.getItem("date")
+      .then((result) => {
+          if(result!=this.state.year+this.state.month+this.state.day){
+            AsyncStorage.setItem('tomato',"0")
+            AsyncStorage.setItem('date',this.state.year+this.state.month+this.state.day)
+          }
+          AsyncStorage.getItem("tomato")
+          .then((result) => {
+              this.setState({tomato:parseInt(result)})
+          })
+      })
     }
 
     countdown(){
@@ -61,22 +77,42 @@ export default class NewHome extends Component {
          m=Math.floor((s+1)/60)
          //console.log("off")
          if(s<=0){
+           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
            display="再次\n开始"
            pause=true
+           this.state.tomato=this.state.tomato+1
+           AsyncStorage.setItem('tomato',(this.state.tomato+""))
+           AsyncStorage.getItem("logined")
+           .then((result) => {
+            if(result=="true"){
+              //和后端对接
+            }
+           })
+           
          }
          if (!pause){
           se=(s-m*60)
           if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
-          return ((m)+":"+Math.floor(se))
+          if(se<10) 
+            se="0"+Math.floor(se)
+          else
+            se=Math.floor(se)
+          if(m<10)
+            m="0"+m
+          return ((m)+":"+se)
          }
          else{
-          if (display=="开始")
+          if (display=="开始"){
+            this.state.time1=((new Date()).valueOf()+25*60*1000)
             return "开始"
+          }
           else 
-          if  (display=="再次\n开始")
+          if  (display=="再次\n开始"){
+            this.state.time1=((new Date()).valueOf()+25*60*1000)
             return "再次\n开始"
+          }
           else
-              return ((m)+":"+Math.floor(se))
+            return ((m)+":"+Math.floor(se))
          }
         /*}
         else{
@@ -97,13 +133,14 @@ export default class NewHome extends Component {
 
     addPoint(){
       if(display=="开始"|display=="再次\n开始"){
+        pause=!pause
         this.setState({time1:(new Date()).valueOf()+this.state.duration})
+      }else{
+        if(!pause){
+          this.editView.show()
+          i=i+1
+        }
       }
-      if(!pause){
-        this.editView.show()
-        i=i+1
-      }
-      pause=!pause
     }
 
     render(){
@@ -115,7 +152,6 @@ export default class NewHome extends Component {
           {this._renderShareButton()}
           {this._render()}
           {this.getTime()}
-          <Toast ref="timeup" position='top' opacity={0.9}/>
           <TextInput
              ref={editView => this.editView = editView}
              inputText={this.state.name}
@@ -126,9 +162,12 @@ export default class NewHome extends Component {
                this.state.uploadData+=this.state.data[i]+"\n"
                )}
           /> 
+          <Text>{this.state.tomato}</Text>
+          <Toast ref="timeup" position='bottom' opacity={0.5} fadeInDuration={200} fadeOutDuration={200}s/>
           </ImageBackground>
       )
     }
+
 
     upload(){
       fetch('http://118.25.56.186/data/create', {
@@ -138,7 +177,7 @@ export default class NewHome extends Component {
         },
         body: JSON.stringify({
               length:"1500",
-              name:this.state.uploadData,
+              content:this.state.uploadData,
               year:this.state.year,
               month:this.state.month,
               day:this.state.day,
@@ -149,9 +188,10 @@ export default class NewHome extends Component {
       .then((jsonData) => {
         let loginreturn = jsonData.status;
         if(loginreturn=="success"){
-          Alert.alert("分享成功","将被显示在时间线上",[
-            {text: '确定', onPress: ()=> console.log('点击确定')}
-        ])
+          this.refs.timeup.show("分享成功"+"将被显示在时间线上",1500)
+        }
+        else{
+            this.refs.timeup.show("请先登录",1500);
         }
     })
     }
