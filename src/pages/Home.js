@@ -49,12 +49,20 @@ export default class Home extends Component {
             year:(new Date()).getFullYear()+"",
             month:((new Date()).getMonth()+1)+"",
             day:(new Date()).getDate()+"",
+            weekday:(new Date()).getDay(),
             tomato:0,
             username:"",
         };
     }
 
     componentDidMount() {
+      /*AsyncStorage.setItem("1","4")
+      AsyncStorage.setItem("2","6")
+      AsyncStorage.setItem("3","4")
+      AsyncStorage.setItem("4","3")
+      AsyncStorage.setItem("5","5")
+      AsyncStorage.setItem("6","8")
+      AsyncStorage.setItem("7","7")*/
       AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})
@@ -180,10 +188,12 @@ export default class Home extends Component {
        m=Math.floor((s+1)/60)
        //console.log("off")
        if(s<=0){
+         this.state.weekday=(new Date()).getDay()
          display="再次\n开始"
          pause=true
          this.state.tomato=this.state.tomato+1
          AsyncStorage.setItem('tomato',(this.state.tomato+""))
+         AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
          AsyncStorage.getItem("logined")
          .then((result) => {
           if(result=="true"){
