@@ -19,7 +19,6 @@ var imgsrc=""
 var i=0
 export default class TimeLine extends Component {
 
-
     constructor(props) {
         super(props);
         this.getView=this.getView.bind(this)

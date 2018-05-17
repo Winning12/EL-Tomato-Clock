@@ -42,7 +42,7 @@ export default class Home extends Component {
             data:[],
             time1:(new Date()).valueOf()+25*60*1000,
             name:"完成了：",
-            duration:1*10*1000,
+            duration:25*60*1000,
             hour:0,
             minute:0,
             uploadData:"",
@@ -50,10 +50,15 @@ export default class Home extends Component {
             month:((new Date()).getMonth()+1)+"",
             day:(new Date()).getDate()+"",
             tomato:0,
+            username:"",
         };
     }
 
     componentDidMount() {
+      AsyncStorage.getItem("user")
+        .then((result) => {
+            this.setState({username:result})
+      })
       AsyncStorage.getItem("date")
       .then((result) => {
           if(result!=this.state.year+this.state.month+this.state.day){
@@ -65,82 +70,7 @@ export default class Home extends Component {
               this.setState({tomato:parseInt(result)})
           })
       })
-    }
-
-    countdown(){
-        //Android.isLocked((Bk)=>{locked=Bk})
-        //if (locked){
-         this.timer = setTimeout(() => {
-          this.setState({time:(new Date()).valueOf()});
-         }, 10)
-         s=(parseInt((this.state.time1-this.state.time)/10)/100).toFixed(2)
-         m=Math.floor((s+1)/60)
-         //console.log("off")
-         if(s<=0){
-           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
-           display="再次\n开始"
-           pause=true
-           this.state.tomato=this.state.tomato+1
-           AsyncStorage.setItem('tomato',(this.state.tomato+""))
-           AsyncStorage.getItem("logined")
-           .then((result) => {
-            if(result=="true"){
-              //和后端对接
-            }
-           })
-           
-         }
-         if (!pause){
-          se=(s-m*60)
-          if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
-          if(se<10) 
-            se="0"+Math.floor(se)
-          else
-            se=Math.floor(se)
-          if(m<10)
-            m="0"+m
-          return ((m)+":"+se)
-         }
-         else{
-          if (display=="开始"){
-            this.state.time1=((new Date()).valueOf()+25*60*1000)
-            return "开始"
-          }
-          else 
-          if  (display=="再次\n开始"){
-            this.state.time1=((new Date()).valueOf()+25*60*1000)
-            return "再次\n开始"
-          }
-          else
-            return ((m)+":"+Math.floor(se))
-         }
-        /*}
-        else{
-          this.timer = setTimeout(() => {
-          this.setState({time:(new Date()).valueOf()})
-          }, 10)
-          s=(parseInt((time1-this.state.time)/10)/100).toFixed(2)
-          m=Math.floor(s/60)
-          console.log("on")
-          return ((m)+":"+(s-m*60-1).toFixed(0))
-        }*/
-
-         //this.timer = setTimeout(() => {
-         //this.setState({time:(new Date()).valueOf()});
-         //}, 10)
-         //s=(parseInt((this.state.time-time1)/10)/100).toFixed(2)
-    } 
-
-    addPoint(){
-      if(display=="开始"|display=="再次\n开始"){
-        pause=!pause
-        this.setState({time1:(new Date()).valueOf()+this.state.duration})
-      }else{
-        if(!pause){
-          this.editView.show()
-          i=i+1
-        }
-      }
+      
     }
 
     render(){
@@ -162,60 +92,9 @@ export default class Home extends Component {
                this.state.uploadData+=this.state.data[i]+"\n"
                )}
           /> 
-          <Text>{this.state.tomato}</Text>
           <Toast ref="timeup" position='bottom' opacity={0.5} fadeInDuration={200} fadeOutDuration={200}s/>
           </ImageBackground>
       )
-    }
-
-
-    upload(){
-      fetch('http://118.25.56.186/data/create', {
-        method: 'POST',
-        headers: {
-              'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-              length:"1500",
-              content:this.state.uploadData,
-              year:this.state.year,
-              month:this.state.month,
-              day:this.state.day,
-              hour:this.state.hour,
-              min:this.state.minute,
-        })
-      }).then((response) => response.json())
-      .then((jsonData) => {
-        let loginreturn = jsonData.status;
-        if(loginreturn=="success"){
-          this.refs.timeup.show("分享成功"+"将被显示在时间线上",1500)
-        }
-        else{
-            this.refs.timeup.show("请先登录",1500);
-        }
-    })
-    }
-
-    clearData(){
-      this.setState({data:[]})
-      this.state.uploadData=""
-    }
-
-    getTime(){
-      hours=(new Date()).getHours()
-      if(hours<10){
-        this.state.hour='0'+hours
-      }
-      else{
-        this.state.hour=""+hours
-      }
-      minutes=(new Date()).getMinutes()
-      if(minutes<10){
-        this.state.minute='0'+minutes
-      }
-      else{
-        this.state.minute=""+minutes
-      }
     }
 
     _renderRow(rowData,rowId){
@@ -229,7 +108,7 @@ export default class Home extends Component {
       return(
         <View style={styles.header}>
           <View animation="bounceIn" style={styles.left} useNativeDriver>
-            {/*Xue:如果为ios,请移除useNativeDriver*/}
+            {/*Xue:如果为ios,若报错请移除useNativeDriver*/}
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonContainer}
@@ -290,6 +169,137 @@ export default class Home extends Component {
           </View>
         )
     }
+
+    countdown(){
+      //Android.isLocked((Bk)=>{locked=Bk})
+      //if (locked){
+       this.timer = setTimeout(() => {
+        this.setState({time:(new Date()).valueOf()});
+       }, 10)
+       s=(parseInt((this.state.time1-this.state.time)/10)/100).toFixed(2)
+       m=Math.floor((s+1)/60)
+       //console.log("off")
+       if(s<=0){
+         display="再次\n开始"
+         pause=true
+         this.state.tomato=this.state.tomato+1
+         AsyncStorage.setItem('tomato',(this.state.tomato+""))
+         AsyncStorage.getItem("logined")
+         .then((result) => {
+          if(result=="true"){
+            this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
+            fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+              })
+          }
+         })
+         
+       }
+       if (!pause){
+        se=(s-m*60)
+        if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
+        if(se<10) 
+          se="0"+Math.floor(se)
+        else
+          se=Math.floor(se)
+        if(m<10)
+          m="0"+m
+        return ((m)+":"+se)
+       }
+       else{
+        if (display=="开始"){
+          this.state.time1=((new Date()).valueOf()+25*60*1000)
+          return "开始"
+        }
+        else 
+        if  (display=="再次\n开始"){
+          this.state.time1=((new Date()).valueOf()+25*60*1000)
+          return "再次\n开始"
+        }
+        else
+          return ((m)+":"+Math.floor(se))
+       }
+      /*}
+      else{
+        this.timer = setTimeout(() => {
+        this.setState({time:(new Date()).valueOf()})
+        }, 10)
+        s=(parseInt((time1-this.state.time)/10)/100).toFixed(2)
+        m=Math.floor(s/60)
+        console.log("on")
+        return ((m)+":"+(s-m*60-1).toFixed(0))
+      }*/
+
+       //this.timer = setTimeout(() => {
+       //this.setState({time:(new Date()).valueOf()});
+       //}, 10)
+       //s=(parseInt((this.state.time-time1)/10)/100).toFixed(2)
+    } 
+
+    addPoint(){
+      if(display=="开始"|display=="再次\n开始"){
+        pause=!pause
+        this.setState({time1:(new Date()).valueOf()+this.state.duration})
+      }else{
+        if(!pause){
+          this.editView.show()
+          i=i+1
+        }
+      }
+    }
+
+    upload(){
+      fetch('http://118.25.56.186/data/create', {
+        method: 'POST',
+        headers: {
+              'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+              length:"1500",
+              content:this.state.uploadData,
+              year:this.state.year,
+              month:this.state.month,
+              day:this.state.day,
+              hour:this.state.hour,
+              min:this.state.minute,
+        })
+      }).then((response) => response.json())
+      .then((jsonData) => {
+        let loginreturn = jsonData.status;
+        if(loginreturn=="success"){
+          this.refs.timeup.show("分享成功"+"将被显示在时间线上",1500)
+        }
+        else{
+            this.refs.timeup.show("请先登录",1500);
+        }
+    })
+    }
+
+    clearData(){
+      this.setState({data:[]})
+      this.state.uploadData=""
+    }
+
+    getTime(){
+      hours=(new Date()).getHours()
+      if(hours<10){
+        this.state.hour='0'+hours
+      }
+      else{
+        this.state.hour=""+hours
+      }
+      minutes=(new Date()).getMinutes()
+      if(minutes<10){
+        this.state.minute='0'+minutes
+      }
+      else{
+        this.state.minute=""+minutes
+      }
+    }
+
 }
 
 const styles = StyleSheet.create({
