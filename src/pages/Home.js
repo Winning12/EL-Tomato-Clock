@@ -56,13 +56,13 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-      /*AsyncStorage.setItem("1","4")
+      AsyncStorage.setItem("1","4")
       AsyncStorage.setItem("2","6")
       AsyncStorage.setItem("3","4")
       AsyncStorage.setItem("4","3")
       AsyncStorage.setItem("5","5")
       AsyncStorage.setItem("6","8")
-      AsyncStorage.setItem("7","7")*/
+      AsyncStorage.setItem("7","7")
       AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})

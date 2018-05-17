@@ -7,14 +7,40 @@ import {
     Text,
     ImageBackground,
     InteractionManager,
+    AsyncStorage,
     } from 'react-native'
 import My from './My'
 import {createAnimatableComponent, View,} from 'react-native-animatable'
-import {YAxis,XAxis, LineChart,BarChart, Grid, StackedAreaChart, StackedBarChart} from 'react-native-svg-charts'
-import * as shape from 'd3-shape'
+import * as Progress from 'react-native-progress';
 
 
 export default class Statistic extends Component {
+
+  constructor(props) {
+    super(props);
+    this._renderBars=this._renderBars.bind(this)
+    this._renderBars_last=this._renderBars_last.bind(this)
+    this.handleFill=this.handleFill.bind(this)
+    this.state = {
+        data: [],
+        refreshing: false,
+        length:0,
+        myitem:{},
+        name:"",
+        weekday:(new Date()).getDay(),
+        count:7,
+        length:0,
+        tomato:[0,0,0,0,0,0,0],
+        tomato1:0,
+        tomato2:0,
+        tomato3:0,
+        tomato4:0,
+        tomato5:0,
+        tomato6:0,
+        tomato7:0,
+    };
+  }
+  //数组不支持强制更新，不能解决异步读写的回调延迟问题，故使用七个单独变量
   
   static navigationOptions = {
     headerTitle: 
@@ -27,136 +53,194 @@ export default class Statistic extends Component {
     headerTintColor:'#686868',
   };
 
-  constructor(props) {
-        super(props);
-        this.state = {
-            
-        };
-    }
 
+  //理由同上
   componentDidMount() {
+    AsyncStorage.getItem("1")
+      .then((result) => {
+        this.setState({tomato1:result})
+        if(result>this.state.length){
+          this.setState({length:result})
+        }
+    })
+    AsyncStorage.getItem("2")
+      .then((result) => {
+        this.setState({tomato2:result})
+        if(result>this.state.length){
+          this.setState({length:result})
+        }
+    })
+    AsyncStorage.getItem("3")
+      .then((result) => {
+        this.setState({tomato3:result})
+        if(result>this.state.length){
+          this.setState({length:result})
+        }
+    })
+    AsyncStorage.getItem("4")
+    .then((result) => {
+      this.setState({tomato4:result})
+      if(result>this.state.length){
+        this.setState({length:result})
+      }
+    })
+    AsyncStorage.getItem("5")
+    .then((result) => {
+      this.setState({tomato5:result})
+      if(result>this.state.length){
+        this.setState({length:result})
+      }
+    })
+    AsyncStorage.getItem("6")
+    .then((result) => {
+      this.setState({tomato6:result})
+      if(result>this.state.length){
+        this.setState({length:result})
+      }
+    })
+    AsyncStorage.getItem("7")
+    .then((result) => {
+      this.setState({tomato7:result})
+      if(result>this.state.length){
+        this.setState({length:result})
+      }
+    })
 
   }
 
-  _back = () => {
-        this.props.navigator.pop()
-  }
-
-
-  render() {
-      return this._render_later();
-  }
-
-  _render_later() {
-
-    const data = [ 50, 10, 40, 95, 14, 24, 85, 91, 35, 53, 53, 24, 50, 20, 70 ]
-    const contentInset = { top: 10, bottom: 10 }
-    
+  //无奈手动复制7份，避免动态添加组件与ARTVIEW冲突(动态添加写起来也较麻烦- -)
+  //效率与解决了冲突的动态添加是一样的，在_render判断参数小于零后直接被短路
+  render(){
+    this.synchro()
+    this.state.count=7
     return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-
-      <ImageBackground
-          style={styles.container}
-          source={require('../resource/Back.png')}
-          resizeMode="cover">
-
-          <View style={{width:350, height: 400, padding: 20}}>
-           <View style={{width:350,height:350, padding: 20, flexDirection: 'row' }}>  
-               <YAxis
-                    style={{width:30,height:350,marginRight:20}}
-                    data={ data }
-                    contentInset={ contentInset }
-                    svg={{
-                        fill: 'black',
-                        fontSize: 10,
-                    }}
-                    numberOfTicks={ 10 }
-                    formatLabel={ value => `${value}` }
-                />
-          
-                <LineChart
-                    style={{ flex: 1, height:350,width:300 }}
-                    data={ data }
-                    showGrid={false}
-                    contentInset={{ top: 10, bottom: 10 }}
-                    svg={{ stroke: 'rgb(222,148,151)' }}
-                >
-                    <Grid/>
-                </LineChart>
-            </View>
-            <View style={{width:280,height:50,marginTop:20,marginLeft:60}}>
-                <XAxis
-                    style={{ height:30}}
-                    data={ data }
-                    formatLabel={ (value, index) => (index+1) }
-                    contentInset={{ left: 10, right: 10 }}
-                    svg={{ fontSize: 10, fill: 'black' }}
-                />
-            </View>
-            </View>
-    </ImageBackground>
+    <View style={styles.container}>
+      {this._renderBars(this.state.weekday)}
+      {this._renderBars(this.state.weekday-1)}
+      {this._renderBars(this.state.weekday-2)}
+      {this._renderBars(this.state.weekday-3)}
+      {this._renderBars(this.state.weekday-4)}
+      {this._renderBars(this.state.weekday-5)}
+      {this._renderBars(this.state.weekday-6)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
+      {this._renderBars_last(this.state.weekday)}
     </View>
-    );
+    )
+  }
+
+  synchro(){
+    this.state.tomato[0]=this.state.tomato1
+    this.state.tomato[1]=this.state.tomato2
+    this.state.tomato[2]=this.state.tomato3
+    this.state.tomato[3]=this.state.tomato4
+    this.state.tomato[4]=this.state.tomato5
+    this.state.tomato[5]=this.state.tomato6
+    this.state.tomato[6]=this.state.tomato7
+  }
+
+  _renderBars(weekday){
+    if (weekday>0){
+    return(
+        <View style={{marginBottom:10,alignItems: 'center',flexDirection:'row'}}>
+          <View style={styles.avatarContainer}>
+            <Image
+            style={{width: 35, height: 35}}
+            source={require('../resource/my_avatar.png')}
+            />
+          </View>
+          <View style={{marginLeft:5,flexDirection:'column'}}>
+            <Text style={{fontSize:18}}>周{weekday}</Text>
+            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(weekday)} width={250} height={8} color="#686868"  useNativeDriver/>
+          </View>
+        </View>
+    )
+    }
+  }
+
+  _renderBars_last(weekday){
+    if ((this.state.count-weekday)>0){
+    weekday=weekday+1
+    this.state.count=this.state.count-1
+    return(
+        <View style={{marginBottom:10,alignItems: 'center',flexDirection:'row'}}>
+          <View style={styles.avatarContainer}>
+            <Image
+            style={{width: 35, height: 35}}
+            source={require('../resource/my_avatar.png')}
+            />
+          </View>
+          <View style={{marginLeft:5,flexDirection:'column'}}>
+            <Text style={{fontSize:18}}>周{this.state.count+1}</Text>
+            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.count+1)} width={250} height={8} color="#686868"  useNativeDriver/>
+          </View>
+        </View>
+    )
+    }
+  }
+
+  handleFill(weekday){
+    if(this.state.length!=0)
+     return 1.0*(this.state.tomato[weekday-1]/this.state.length)
+    else
+     return 0
   }
   
-  _render_earlier() {
-    return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
 
-      <ImageBackground
-          style={styles.container}
-          source={require('../resource/Back.png')}
-          resizeMode="cover">
-
-    </ImageBackground>
-    </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
+  centerContainer: {
+      backgroundColor: 'rgb(240,240,240)',
+      justifyContent: 'center',
+      alignItems: 'center',
   },
-  input: {
-    width: 200,
-    height: 40,
-    color: 'rgb(222,148,151)',
-  },
-  button: {
-    height: 50,
-    width: 280,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: 'white',    
-    marginBottom: 8,
-    opacity:0.9,
-  },
-  btText: {
-    color: 'rgb(222,148,151)',
-  },
-  header: {
-    flexDirection: 'row',
-    height: 60,
-    alignItems: 'center'
+  image: {
+      width: 90,
+      height: 90,
+      borderBottomLeftRadius: 5,
+      borderTopLeftRadius: 5,
+
   },
   left: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    },
+      flex: 1,
+      marginLeft: 18,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+  },
+  avatarContainer: {
+      marginLeft:10,
+      width: 55,
+      height: 55,
+      borderRadius: 25,
+      backgroundColor: 'white',
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
   right: {
-    flex: 1,
-    marginLeft: 18,
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    },
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+  },
   center: {
-    flex: 1,
-    marginLeft: 18,
-    flexDirection: 'column',
-    alignItems: 'center',
-    },
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center',
+  },
+  content: {
+      bottom: 10,
+      marginRight: 16,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+  },
+  header: {
+      flexDirection: 'row',
+      height: 50,
+      backgroundColor:'rgb(248,248,248)',
+      alignItems: 'center',
+  },
 });
