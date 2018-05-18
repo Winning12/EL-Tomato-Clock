@@ -67,7 +67,7 @@ export default class Ranking extends Component {
 
     render(){
         return (
-        <View style={styles.container}>
+        <View animation="fadeIn" style={styles.container} useNativeDriver>
         <View style={{alignItems: 'center',flexDirection:'row',backgroundColor:"white"}}>
             <View style={styles.avatarContainer}>
                 <Image
@@ -97,7 +97,7 @@ export default class Ranking extends Component {
 
     getView({item}) {
         return (
-        <View style={{marginTop:10,marginBottom:10,alignItems: 'center',flexDirection:'row'}}>
+        <View animation="fadeIn" style={{marginTop:10,marginBottom:10,alignItems: 'center',flexDirection:'row'}} useNativeDriver>
             <View style={styles.avatarContainer}>
                 <Image
                 style={{width: 35, height: 35}}

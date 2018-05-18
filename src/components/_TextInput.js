@@ -26,30 +26,19 @@ export default class _TextInput extends Component {
         }
     }
 
-    // 打开对话框
     show() {
         this.setState({
             isShow: true,
             inputText: this.props.inputText
         });
-
-        //Animated.parallel == 同时执行多个动画
         Animated.parallel([
-            //Animated.timing == 推动一个值按照一个过渡曲线而随时间变化
             Animated.timing(this.state.opacityAnimationValue, {
                 toValue: 1,
                 duration: 200 + 100
             }),
-            //Animated.spring == 产生一个基于Rebound和Origami实现的Spring动画。它会在toValue值更新的同时跟踪当前的速度状态，以确保动画连贯,比timing动画连贯流畅
-            /*Animated.spring(this.state.scaleAnimationValue, {
-                toValue: 1,
-                duration: 200,
-                friction: 5
-            })*/
         ]).start();
     }
 
-    // 关闭对话框
     _close() {
         this.setState({isShow: false});
         this.state.opacityAnimationValue.setValue(0);
@@ -61,7 +50,6 @@ export default class _TextInput extends Component {
         const {ensureCallback,titleTxt} = this.props;
 
         return (
-            // 最外层是一个半透明的黑色蒙版背景,点击的时候对话框也会消失
             <Animated.View style={[styles.container, {opacity: this.state.opacityAnimationValue}]}>
                 <TouchableOpacity
                     activeOpacity={1}
@@ -104,7 +92,6 @@ export default class _TextInput extends Component {
                                 style={[styles.center, {height:50,borderRadius: 5,flex: 4.5}]}
                                 onPress={() => {
                                     this._close();
-                                    // 子组件传递数据到父组件 
                                     ensureCallback(this.state.inputText);
                                 }}
                             >
