@@ -10,24 +10,30 @@ import {
     AppState,
     AsyncStorage,
     Alert,
+    BackHandler,
+    Platform,
+    DeviceEventEmitter
 } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import TextInput from '../components/_TextInput'
 import { createAnimatableComponent, View, Text } from 'react-native-animatable'
+import RNKeyguardModule from './Origin'
 
 {
     var display="开始"
     var pause=true
+    var timePause=false
     var refreshed=false
     var m=24
     var i=0
     var backIM=require('../resource/Back.png')
-    var Prevtime=0
+    var mstr="";
+    var sestr="";
     var se=0
-    var retnormal=false
     var hours=0
     var minutes=0
+    var s=0
 } 
 
 export default class Home extends Component {
@@ -40,9 +46,10 @@ export default class Home extends Component {
             time:0,
             dataSource:ds,
             data:[],
-            time1:(new Date()).valueOf()+25*60*1000,
+            time1:(new Date()).valueOf()+1*10*1000,
             name:"完成了：",
-            duration:25*60*1000,
+            duration:1*10*1000,
+            lasttime:1*10*1000,
             hour:0,
             minute:0,
             uploadData:"",
@@ -55,14 +62,24 @@ export default class Home extends Component {
         };
     }
 
+    handleAppStateChange(appState){
+      if(appState==='background'){
+          RNKeyguardModule.isLocked((unlocked)=>{
+              if(unlocked){
+                  timePause=true;
+              }
+          })
+      }
+    }
+
+    componentWillMount() {
+      if (Platform.OS === 'android') {
+          BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+      }
+      AppState.addEventListener('change',this.handleAppStateChange.bind(this));
+    }
+
     componentDidMount() {
-      AsyncStorage.setItem("1","4")
-      AsyncStorage.setItem("2","6")
-      AsyncStorage.setItem("3","4")
-      AsyncStorage.setItem("4","3")
-      AsyncStorage.setItem("5","5")
-      AsyncStorage.setItem("6","8")
-      AsyncStorage.setItem("7","7")
       AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})
@@ -79,6 +96,28 @@ export default class Home extends Component {
           })
       })
       
+    }
+
+    onBackAndroid=()=>{
+      if(!pause){
+        Alert.alert(
+          '退出应用',
+          '当前计时将被重置',
+          [{text:'确定',
+            onPress:()=>{
+              pause=true;
+              display="再次\n开始"
+              BackHandler.exitApp();
+            }},
+            {text:'取消',
+              onPress:()=>{
+                pause=false;
+            }},])
+        return true
+      }
+      else {
+        return false
+      }
     }
 
     render(){
@@ -101,6 +140,7 @@ export default class Home extends Component {
                )}
           /> 
           <Toast ref="timeup" position='bottom' opacity={0.5} fadeInDuration={200} fadeOutDuration={200}s/>
+          <Text>{this.state.username}/{this.state.tomato}</Text>
           </ImageBackground>
       )
     }
@@ -139,7 +179,6 @@ export default class Home extends Component {
       }else{
       return(
         <View style={styles.header}>
-
         </View>
           )
       }
@@ -148,6 +187,7 @@ export default class Home extends Component {
     _render() {
         if (refreshed==true){
             refreshed=false
+            this.setState({time1:(new Date()).valueOf()+this.state.lasttime})
             pause=false
         }
         display=this.countdown() 
@@ -162,7 +202,7 @@ export default class Home extends Component {
             onAnimationComplete={() => console.log('onAnimationComplete')}
             backgroundColor="#a3a3a3" >
             {(fill) => (
-            <TouchableOpacity style={styles.btn} onPress={this.addPoint.bind(this)}>
+            <TouchableOpacity style={styles.btn} onPress={this.handlePause.bind(this)}>
               <Text style={styles.counter}>
               {display}
               </Text>
@@ -179,80 +219,78 @@ export default class Home extends Component {
     }
 
     countdown(){
-      //Android.isLocked((Bk)=>{locked=Bk})
-      //if (locked){
-       this.timer = setTimeout(() => {
-        this.setState({time:(new Date()).valueOf()});
-       }, 10)
-       s=(parseInt((this.state.time1-this.state.time)/10)/100).toFixed(2)
-       m=Math.floor((s+1)/60)
-       //console.log("off")
-       if(s<=0){
-         this.state.weekday=(new Date()).getDay()
-         display="再次\n开始"
-         pause=true
-         this.state.tomato=this.state.tomato+1
-         AsyncStorage.setItem('tomato',(this.state.tomato+""))
-         AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
-         AsyncStorage.getItem("logined")
-         .then((result) => {
-          if(result=="true"){
-            this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
-            fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json'
-              }
-              })
+      this.timer = setTimeout(()=>{
+          this.setState({
+              time:(new Date()).valueOf()
+          });}, 10)
+      lastseconds=(parseInt((this.state.time1-this.state.time)/10)/100).toFixed(2)
+      m=Math.floor((lastseconds+1)/60)
+      se=(lastseconds-m*60)
+      if((lastseconds<=0)&&(this.state.lasttime<=0)&&(!pause)){
+        display="再次\n开始"
+        pause=true
+        this.state.weekday=(new Date()).getDay()
+        this.state.tomato=this.state.tomato+1
+        AsyncStorage.setItem('tomato',(this.state.tomato+""))
+        AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
+        AsyncStorage.getItem("logined")
+        .then((result) => {
+         if(result=="true"){
+           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
+           fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
+             method: 'GET',
+             headers: {
+                 'Content-Type': 'application/json'
+             }
+             })
+         }
+        })
+      }
+      if(!timePause){
+        if (!pause){
+          this.state.lasttime=this.state.time1-this.state.time//记录时间差用于暂停
+          if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
+          if ((m>=10)&&(se>=10)){
+              mstr=m
+              sestr=Math.floor(se)
+              return ((m)+":"+Math.floor(se))
           }
-         })
-         
-       }
-       if (!pause){
-        se=(s-m*60)
-        if((se).toFixed(0)==60) se=59//仅修正毫秒换算成秒后的显示问题，不造成时间记录上的误差
-        if(se<10) 
-          se="0"+Math.floor(se)
-        else
-          se=Math.floor(se)
-        if(m<10)
-          m="0"+m
-        return ((m)+":"+se)
-       }
-       else{
-        if (display=="开始"){
-          this.state.time1=((new Date()).valueOf()+25*60*1000)
-          return "开始"
+          else if ((m>=10)&&(se<10)) {
+              mstr=m
+              sestr="0"+Math.floor(se)
+              return ((m)+":0"+Math.floor(se))
+          }
+          else if ((m<10)&&(se>=10)) {
+              mstr="0"+m
+              sestr=Math.floor(se)
+              return ("0"+(m)+":"+Math.floor(se))
+          }
+          else {
+              mstr="0"+m
+              sestr="0"+Math.floor(se)
+              return ("0"+(m)+":0"+Math.floor(se))
+          }
         }
-        else 
-        if  (display=="再次\n开始"){
-          this.state.time1=((new Date()).valueOf()+25*60*1000)
-          return "再次\n开始"
+        else{
+          if (display=="开始"){
+              return "开始"
+          }
+          else if  (display=="再次\n开始"){
+              return "再次\n开始"
+          }
         }
-        else
-          return ((m)+":"+Math.floor(se))
-       }
-      /*}
-      else{
-        this.timer = setTimeout(() => {
-        this.setState({time:(new Date()).valueOf()})
-        }, 10)
-        s=(parseInt((time1-this.state.time)/10)/100).toFixed(2)
-        m=Math.floor(s/60)
-        console.log("on")
-        return ((m)+":"+(s-m*60-1).toFixed(0))
-      }*/
+      }else{
+        this.state.time1=(new Date()).valueOf()+this.state.lasttime
+        return "继续"
+      }
+    }
 
-       //this.timer = setTimeout(() => {
-       //this.setState({time:(new Date()).valueOf()});
-       //}, 10)
-       //s=(parseInt((this.state.time-time1)/10)/100).toFixed(2)
-    } 
-
-    addPoint(){
+    handlePause(){
       if(display=="开始"|display=="再次\n开始"){
         pause=!pause
         this.setState({time1:(new Date()).valueOf()+this.state.duration})
+      }else if(display=="继续"){
+        timePause=!timePause
       }else{
         if(!pause){
           this.editView.show()

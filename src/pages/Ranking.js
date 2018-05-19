@@ -15,18 +15,27 @@ import * as Progress from 'react-native-progress';
 export default class Ranking extends Component {
     constructor(props) {
         super(props);
+        navigation=this.props.navigation;
         this.getView=this.getView.bind(this)
         this.handleFill=this.handleFill.bind(this)
+        this._renderMine=this._renderMine.bind(this)
         this.state = {
             data: [],
             refreshing: false,
             length:0,
             myitem:{},
             name:"",
+            login:false
         };
     }
 
     componentDidMount() {
+        AsyncStorage.getItem("logined")
+        .then((result) => {
+         if(result=="true"){
+             this.setState({login:true})
+         }
+        })
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({name:result})
@@ -68,18 +77,7 @@ export default class Ranking extends Component {
     render(){
         return (
         <View animation="fadeIn" style={styles.container} useNativeDriver>
-        <View style={{alignItems: 'center',flexDirection:'row',backgroundColor:"white"}}>
-            <View style={styles.avatarContainer}>
-                <Image
-                style={{width: 35, height: 35}}
-                source={require('../resource/my_avatar.png')}
-                />
-            </View>
-            <View style={{marginLeft:5,flexDirection:'column'}}>
-                <Text style={{fontSize:15}}>我：</Text>
-                <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.myitem)} width={250} height={8} color="#686868"  useNativeDriver/>
-            </View>
-        </View>
+        {this._renderMine()}
         <FlatList
             data={this.state.data}
             renderItem={this.getView}
@@ -95,6 +93,31 @@ export default class Ranking extends Component {
         )
     }
 
+    _renderMine(){
+        if(this.state.login){
+            return(
+            <View style={{alignItems: 'center',flexDirection:'row',backgroundColor:"white"}}>
+                <View style={styles.avatarContainer}>
+                    <Image
+                    style={{width: 35, height: 35}}
+                    source={require('../resource/my_avatar.png')}
+                    />
+                </View>
+                <View style={{marginLeft:5,flexDirection:'column'}}>
+                    <Text style={{fontSize:15}}>我：</Text>
+                    <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.myitem)} width={250} height={8} color="#686868"  useNativeDriver/>
+                </View>
+            </View>
+            )
+        }else{
+            return(
+            <View style={{alignItems: 'center',height:55,flexDirection:'row',backgroundColor:"white"}}>
+                <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Login')}>
+                    <Text style={{fontSize:20}}>登录以查看排名</Text>
+                </TouchableOpacity>
+            </View>)
+        }
+    }
     getView({item}) {
         return (
         <View animation="fadeIn" style={{marginTop:10,marginBottom:10,alignItems: 'center',flexDirection:'row'}} useNativeDriver>

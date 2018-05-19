@@ -5,7 +5,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  AsyncStorage
 } from 'react-native';
 
 import Swiper from 'react-native-swiper';
@@ -22,6 +23,15 @@ export default class _Swiper extends Component {
     header: null,
   };
 
+  componentDidMount(){
+    AsyncStorage.setItem("1","4")
+    AsyncStorage.setItem("2","6")
+    AsyncStorage.setItem("3","4")
+    AsyncStorage.setItem("4","3")
+    AsyncStorage.setItem("5","5")
+    AsyncStorage.setItem("6","8")
+    AsyncStorage.setItem("7","7")
+  }
 
   render(){
     const { navigate } = this.props.navigation;
