@@ -111,13 +111,14 @@ export default class Ranking extends Component {
             )
         }else{
             return(
-            <View style={{alignItems: 'center',height:55,flexDirection:'row',backgroundColor:"white"}}>
+            <View style={{opacity:0.7,alignItems: 'center',height:55,flexDirection:'row',backgroundColor:"white"}}>
                 <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Login')}>
                     <Text style={{fontSize:20}}>登录以查看排名</Text>
                 </TouchableOpacity>
             </View>)
         }
     }
+
     getView({item}) {
         return (
         <View animation="fadeIn" style={{marginTop:10,marginBottom:10,alignItems: 'center',flexDirection:'row'}} useNativeDriver>

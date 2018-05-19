@@ -197,7 +197,7 @@ export default class Home extends Component {
             style={{opacity:0.70}}
             size={220}
             width={4}
-            fill={(100*1000*s/this.state.duration)}
+            fill={(100*1000*lastseconds/this.state.duration)}
             tintColor="black"
             onAnimationComplete={() => console.log('onAnimationComplete')}
             backgroundColor="#a3a3a3" >
