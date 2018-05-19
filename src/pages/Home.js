@@ -18,7 +18,7 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import TextInput from '../components/_TextInput'
 import { createAnimatableComponent, View, Text } from 'react-native-animatable'
-import RNKeyguardModule from './Origin'
+import RNKeyguardModule from '../components/Origin'
 
 {
     var display="开始"

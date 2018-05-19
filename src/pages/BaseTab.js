@@ -12,7 +12,7 @@ import {
 import {TabNavigator,TabBarBottom} from 'react-navigation';  
 import HomePage from './Home';
 import TimeLine from './Timeline';
-import My from './My';
+import MyNavigator from './My_navigator';
 import PropTypes from 'prop-types';
 import TabBarItem  from '../components/TabBarItem'
 
@@ -48,7 +48,7 @@ const Tab = TabNavigator(
         }),  
       },  
     Mine:{  
-        screen:My,  
+        screen:MyNavigator,  
         navigationOptions:({navigation}) => ({  
         tabBarLabel:'我的',  
         tabBarIcon:({focused,tintColor}) => (  

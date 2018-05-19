@@ -37,7 +37,7 @@ export default class Splash extends Component {
                 this.props.navigation.navigate('Swiper');
             else
                 this.props.navigation.navigate('BaseTab');
-        }, 100)
+        }, 2000)
     }
 
     componentWillUnmount() {

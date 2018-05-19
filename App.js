@@ -10,9 +10,9 @@ import {
     AsyncStorage
     } from 'react-native'
 import BaseTab from './src/pages/BaseTab'
-import Swiper from './src/pages/Swiper'
-import Signin from './src/pages/Login_first'
-import Register from './src/pages/Register_first'
+import Swiper from './src/pages/FirstUseOnly/Swiper'
+import Signin from './src/pages/FirstUseOnly/Login_first'
+import Register from './src/pages/FirstUseOnly/Register_first'
 import Splash from './src/pages/Splash'
 
 import { StackNavigator } from 'react-navigation';

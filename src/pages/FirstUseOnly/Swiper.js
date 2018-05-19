@@ -65,7 +65,7 @@ export default class _Swiper extends Component {
         </View>
         <ImageBackground
           style={{flex:1}}
-          source={require('../resource/Back_changed.png')}
+          source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
           <View style={styles.center}>
             <Text style={styles.text}>Sign In | Up</Text>

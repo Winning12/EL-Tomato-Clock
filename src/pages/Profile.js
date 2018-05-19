@@ -8,7 +8,7 @@ import {
     AsyncStorage,
 } from 'react-native'
 import { StackNavigator } from 'react-navigation';
-import Login from './Login_new'
+import Login from './Login'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 
@@ -91,7 +91,6 @@ export default class Profile extends PureComponent {
         })
     }
 
-    _onPressStaticCell = title => alert(title)
 
     render() {
         AsyncStorage.getItem("user")
@@ -155,7 +154,7 @@ export default class Profile extends PureComponent {
                     <ProfileStaticCell
                         title="我的分享"
                         imageName={require('../resource/ic_my_upload.png')}
-                        onPress={this._onPressStaticCell}
+                        onPress={()=>navigate("Sharing")}
                         anima='fadeInLeft'
                         delay={100}
                     />
@@ -219,7 +218,7 @@ export default class Profile extends PureComponent {
                     <ProfileStaticCell
                         title="我的分享"
                         imageName={require('../resource/ic_my_upload.png')}
-                        onPress={this._onPressStaticCell}
+                        onPress={()=>navigate("Sharing")}
                         anima='fadeInLeft'
                         delay={100}
                     />

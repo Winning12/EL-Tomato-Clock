@@ -10,7 +10,6 @@ import {
     InteractionManager,
     AsyncStorage
     } from 'react-native'
-import My from './My'
 import Toast, {DURATION} from 'react-native-easy-toast'
 
 export default class Register extends Component {

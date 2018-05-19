@@ -9,7 +9,6 @@ import {
     InteractionManager,
     AsyncStorage,
     } from 'react-native'
-import My from './My'
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 import * as Progress from 'react-native-progress';
 

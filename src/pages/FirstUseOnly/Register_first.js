@@ -10,7 +10,6 @@ import {
     InteractionManager,
     AsyncStorage
     } from 'react-native'
-import My from './My'
 import Toast, {DURATION} from 'react-native-easy-toast'
 
 export default class RegisterFirst extends Component {
@@ -112,7 +111,7 @@ export default class RegisterFirst extends Component {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_login.png')}
+          source={require('../../resource/Back_login.png')}
           resizeMode="cover">
 
         <View
@@ -171,12 +170,12 @@ export default class RegisterFirst extends Component {
 
       <View
         style={styles.header}>
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
+          <Image style={{width: 30, height: 40}} source={require('../../resource/my_left.png')}/>
       </View>
 
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_changed.png')}
+          source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
 
     </ImageBackground>

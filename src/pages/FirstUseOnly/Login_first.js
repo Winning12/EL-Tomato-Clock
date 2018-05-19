@@ -132,13 +132,13 @@ export default class Loginfirst extends Component {
 
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_login.png')}
+          source={require('../../resource/Back_login.png')}
           resizeMode="cover">
         
         <View style={{marginBottom:30}}>
           <Image
             style={{width: 100, height: 100,opacity:0.5}}
-            source={require('../resource/logo.png')}
+            source={require('../../resource/logo.png')}
           />
         </View>
 
@@ -208,13 +208,13 @@ export default class Loginfirst extends Component {
 
       <View
         style={styles.header}>
-          <Image style={{width: 30, height: 40}} source={require('../resource/my_left.png')}/>
+          <Image style={{width: 30, height: 40}} source={require('../../resource/my_left.png')}/>
           <Text style={{color: '#686868',fontSize:16}}>返回</Text>
       </View>
 
       <ImageBackground
           style={styles.container}
-          source={require('../resource/Back_changed.png')}
+          source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
 
     </ImageBackground>

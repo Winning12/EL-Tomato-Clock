@@ -8,9 +8,10 @@ import {
     Text,
     ImageBackground,
     } from 'react-native'
-import Login from './Login_new'
+import Login from './Login'
 import Register from './Register'
 import Statistic from './Statistic'
+import Sharing from './MySharing'
 import Profile from './Profile'
 import Ranking from './Ranking'
 import { StackNavigator } from 'react-navigation';
@@ -30,13 +31,14 @@ export const ProfileRoutes = StackNavigator({
   Home: { screen: Profile },
   Login: { screen : Login},
   Register: { screen : Register},
-  Statistic:  {screen:Statistic},
+  Statistic: {screen:Statistic},
+  Sharing: { screen:Sharing},
   Ranking: {screen:Ranking},
   }, {
       transitionConfig: TransitionConfiguration,
 });
 
-export default class My extends Component {
+export default class My_navigator extends Component {
   render() {
       return <ProfileRoutes />;
   }
