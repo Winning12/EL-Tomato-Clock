@@ -46,10 +46,10 @@ export default class Home extends Component {
             time:0,
             dataSource:ds,
             data:[],
-            time1:(new Date()).valueOf()+1*10*1000,
+            time1:(new Date()).valueOf(),
             name:"完成了：",
-            duration:1*10*1000,
-            lasttime:1*10*1000,
+            duration:25*60*1000,
+            lasttime:25*60*1000,
             hour:0,
             minute:0,
             uploadData:"",
@@ -140,7 +140,6 @@ export default class Home extends Component {
                )}
           /> 
           <Toast ref="timeup" position='bottom' opacity={0.5} fadeInDuration={200} fadeOutDuration={200}s/>
-          <Text>{this.state.username}/{this.state.tomato}</Text>
           </ImageBackground>
       )
     }
