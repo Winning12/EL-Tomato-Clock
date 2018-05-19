@@ -147,9 +147,11 @@ export default class Ranking extends Component {
                 this.setState({
                     data: json,
                 });
-                for (i=0;i<this.state.data.length;i++){
-                    if(this.state.data[i].name==this.state.name)
-                        this.setState({myitem:this.state.data[i]})
+                if(this.state.login){
+                    for (i=0;i<this.state.data.length;i++){
+                        if(this.state.data[i].name==this.state.name)
+                            this.setState({myitem:this.state.data[i]})
+                    }
                 }
             })
             .catch((error) => {
