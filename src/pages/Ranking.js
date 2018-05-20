@@ -12,6 +12,12 @@ import { StackNavigator } from 'react-navigation';
 import {createAnimatableComponent, View} from 'react-native-animatable'
 import * as Progress from 'react-native-progress';
 
+var avatars=[require('../resource/1.png'),require('../resource/2.png'),
+require('../resource/3.png'),require('../resource/4.png'),
+require('../resource/5.png'),require('../resource/6.png'),
+require('../resource/7.png'),require('../resource/8.png'),
+require('../resource/9.png'),require('../resource/10.png'),
+require('../resource/11.png'),]
 export default class Ranking extends Component {
     constructor(props) {
         super(props);
@@ -125,7 +131,7 @@ export default class Ranking extends Component {
             <View style={styles.avatarContainer}>
                 <Image
                 style={{width: 35, height: 35}}
-                source={require('../resource/my_avatar.png')}
+                source={avatars[parseInt(item.avatar)]}
                 />
             </View>
             <View style={{marginLeft:5,flexDirection:'column'}}>

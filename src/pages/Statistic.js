@@ -12,7 +12,10 @@ import {
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 import * as Progress from 'react-native-progress';
 
-
+var weekdays=[require('../resource/Mon.png'),require('../resource/Tue.png'),
+require('../resource/Wed.png'),require('../resource/Thu.png'),
+require('../resource/Fri.png'),require('../resource/Sat.png'),
+require('../resource/Sun.png'),]
 export default class Statistic extends Component {
 
   constructor(props) {
@@ -20,6 +23,7 @@ export default class Statistic extends Component {
     this._renderBars=this._renderBars.bind(this)
     this._renderBars_last=this._renderBars_last.bind(this)
     this.handleFill=this.handleFill.bind(this)
+    this.handleChinese=this.handleChinese.bind(this)
     this.state = {
         data: [],
         refreshing: false,
@@ -37,6 +41,7 @@ export default class Statistic extends Component {
         tomato5:0,
         tomato6:0,
         tomato7:0,
+        avatar:null,
     };
   }
   //数组不支持强制更新，不能解决异步读写的回调延迟问题，故使用七个单独变量
@@ -149,11 +154,11 @@ export default class Statistic extends Component {
           <View style={styles.avatarContainer}>
             <Image
             style={{width: 35, height: 35}}
-            source={require('../resource/my_avatar.png')}
+            source={weekdays[weekday-1]}
             />
           </View>
           <View style={{marginLeft:5,flexDirection:'column'}}>
-            <Text style={{fontSize:18}}>周{weekday}</Text>
+            <Text style={{fontSize:18}}>{this.handleChinese(weekday)}</Text>
             <Progress.Bar style={{marginTop:5}} progress={this.handleFill(weekday)} width={250} height={8} color="#686868"  useNativeDriver/>
           </View>
         </View>
@@ -170,15 +175,27 @@ export default class Statistic extends Component {
           <View style={styles.avatarContainer}>
             <Image
             style={{width: 35, height: 35}}
-            source={require('../resource/my_avatar.png')}
+            source={weekdays[this.state.count]}
             />
           </View>
           <View style={{marginLeft:5,flexDirection:'column'}}>
-            <Text style={{fontSize:18}}>周{this.state.count+1}</Text>
+            <Text style={{fontSize:18}}>{this.handleChinese(this.state.count+1)}</Text>
             <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.count+1)} width={250} height={8} color="#686868"  useNativeDriver/>
           </View>
         </View>
     )
+    }
+  }
+
+  handleChinese(weekday){
+    switch(weekday){
+      case 1:return "周一"
+      case 2:return "周二"
+      case 3:return "周三"
+      case 4:return "周四"
+      case 5:return "周五"
+      case 6:return "周六"
+      case 7:return "周日"
     }
   }
 
@@ -216,7 +233,6 @@ const styles = StyleSheet.create({
       width: 55,
       height: 55,
       borderRadius: 25,
-      backgroundColor: 'white',
       justifyContent: 'center',
       alignItems: 'center',
   },
