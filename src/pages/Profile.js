@@ -156,27 +156,27 @@ export default class Profile extends PureComponent {
                 <View style={[styles.cellContainer]}>
                     <ProfileStaticCell
                         title="专注统计"
-                        imageName={require('../resource/ic_my_photos.png')}
+                        imageName={require('../resource/statistic.png')}
                         onPress={()=>navigate('Statistic')}
                         anima='fadeInLeft'
                     />
                     <ProfileStaticCell
                         title="专注排名"
-                        imageName={require('../resource/ic_my_collect.png')}
+                        imageName={require('../resource/ranking.png')}
                         onPress={()=>navigate("Ranking")}
                         anima='fadeInLeft'
                         delay={50}
                     />
                     <ProfileStaticCell
                         title="我的分享"
-                        imageName={require('../resource/ic_my_upload.png')}
+                        imageName={require('../resource/upload.png')}
                         onPress={()=>navigate("Sharing")}
                         anima='fadeInLeft'
                         delay={100}
                     />
                     <ProfileStaticCell
                         title="重置应用"
-                        imageName={require('../resource/ic_my_right.png')}
+                        imageName={require('../resource/refresh.png')}
                         onPress={this.refresh}
                         anima='fadeInLeft'
                         delay={150}
@@ -220,27 +220,27 @@ export default class Profile extends PureComponent {
                 <View style={[styles.cellContainer]}>
                     <ProfileStaticCell
                         title="专注统计"
-                        imageName={require('../resource/ic_my_photos.png')}
+                        imageName={require('../resource/statistic.png')}
                         onPress={()=>navigate('Statistic')}
                         anima='fadeInLeft'
                     />
                     <ProfileStaticCell
                         title="专注排名"
-                        imageName={require('../resource/ic_my_collect.png')}
+                        imageName={require('../resource/ranking.png')}
                         onPress={()=>navigate("Ranking")}
                         anima='fadeInLeft'
                         delay={50}
                     />
                     <ProfileStaticCell
                         title="我的分享"
-                        imageName={require('../resource/ic_my_upload.png')}
+                        imageName={require('../resource/upload.png')}
                         onPress={()=>navigate("Sharing")}
                         anima='fadeInLeft'
                         delay={100}
                     />
                     <ProfileStaticCell
                         title="重置应用"
-                        imageName={require('../resource/ic_my_right.png')}
+                        imageName={require('../resource/refresh.png')}
                         onPress={this.refresh}
                         anima='fadeInLeft'
                         delay={150}
