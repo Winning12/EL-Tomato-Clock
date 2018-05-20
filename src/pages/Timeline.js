@@ -75,7 +75,7 @@ export default class TimeLine extends Component {
                     refreshing={this.state.refreshing}
 
                     ListFooterComponent={
-                        <View style={{borderRadius:8,marginTop:5,alignItems: 'center',backgroundColor:'white'}}>
+                        <View style={{borderRadius:8,margin:5,alignItems: 'center',backgroundColor:'white'}}>
                         <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
                         <Text style={{color: '#585858',fontSize:20}}>请下拉以尝试刷新</Text>
                         </View>
@@ -172,7 +172,7 @@ export default class TimeLine extends Component {
                 count++;
             }
             if(count>=2){
-                res+='\n'+'…………'
+                res+='\n'+'点击展开'
                 break;
             }
             res+=item.content[i];

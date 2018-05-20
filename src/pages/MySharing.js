@@ -16,18 +16,53 @@ export default class Sharing extends Component {
         super(props);
         navigation=this.props.navigation;
         this.getView=this.getView.bind(this)
+        this._renderFooter=this._renderFooter.bind(this)
+        this._renderHeader=this._renderHeader.bind(this)
         this.state = {
             data: [],
             refreshing: false,
             length:0,
             myitem:{},
             name:"",
-            login:false
+            login:false,
+            year:(new Date()).getFullYear(),
+            month:(new Date()).getMonth()+1,
+            day:(new Date()).getDate(),
+            opacity:0.7,
+            name:"",
+            username:"",
+            login:false,
         };
     }
 
-    componentDidMount() {
-        
+    componentWillMount() {
+        AsyncStorage.getItem("logined")
+        .then((result) => {
+         if(result=="true"){
+             this.setState({login:true})
+         }
+        })
+        AsyncStorage.getItem("user")
+        .then((result) => {
+            this.setState({username:result})
+            fetch('http://118.25.56.186/data?author='+this.state.username, {
+                method: 'GET',
+                headers: {
+                      'Content-Type': 'application/json'
+                }
+                }).then((response) => response.json())
+                .then((response) => {
+                    var json = response;
+                    this.setState({
+                        data: json,
+                    });
+                })
+                .catch((error) => {
+                    if (error) {
+                        console.log('error', error);
+                    }
+                });
+        })
     }
 
     static navigationOptions = {
@@ -43,30 +78,76 @@ export default class Sharing extends Component {
 
     render(){
         return (
-            <Text />
+           <View style={styles.container}>
+                {this._renderHeader()}
+                <FlatList
+                    data={this.state.data}
+                    keyExtractor={this.keyExtractor}
+                    renderItem={this.getView}
+
+                    onRefresh={this.onRefresh}
+                    refreshing={this.state.refreshing}
+
+                    ListFooterComponent={
+                        this._renderFooter()
+                    }
+                />
+            </View>
         )
     }
 
 
     getView({item}) {
         return (
-        <View animation="fadeIn" style={{marginTop:10,marginBottom:10,alignItems: 'center',flexDirection:'row'}} useNativeDriver>
-            <View style={styles.avatarContainer}>
-                <Image
-                style={{width: 35, height: 35}}
-                source={require('../resource/my_avatar.png')}
-                />
+            <View animation='fadeIn' useNativeDriver>
+            <TouchableOpacity 
+            activeOpacity={0.75}>
+                <View style={styles.item}>
+                    <View style={{marginLeft:10,marginTop:10}}>
+                        <Text style={{ color: '#333333',fontSize:18}}>{item.content}</Text>
+                    </View>
+                    <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
+                        <Text style={{ color: '#a8a8a8',fontSize:15}}>{this.handleItemDate(item)}</Text>
+                        <View style={{justifyContent:'center',alignItems: 'flex-end',flex: 1,marginRight:20}}>
+                            <TouchableOpacity 
+                            activeOpacity={0.5}>
+                                <View style={{opacity:this.state.opacity,flexDirection:'row',borderRadius:5,borderWidth:1,borderColor:'#c8c8c8'}}>
+                                    <Image style={{margin:3,width:20,height:20}} source={require('../resource/ic_feed_like.png')}/>
+                                    <Text style={{margin:3}}>{this.handleLikeNumbers(item) + ''}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
             </View>
-            <View style={{marginLeft:5,flexDirection:'column'}}>
-                <Text style={{fontSize:18}}>{item.name}</Text>
-                <Progress.Bar style={{marginTop:5}} progress={this.handleFill(item)} width={250} height={8} color="#686868"/>
-            </View>
-        </View>
         )
     };
 
+    handleItemDate(item){
+        if(item.year==this.state.year){
+            if(item.month==this.state.month){
+                if(item.day==this.state.day)
+                    return "今天    "+item.hour+"时"+item.min+"分发布"
+                else
+                    return item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+            }
+            else 
+                return item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+        }
+        else
+            return item.year+"年"+item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
+    }
+
+    handleLikeNumbers(item){
+        if(item.likedusers!=undefined)
+            return item.likedusers.length
+        else
+            return 0
+    }
+
     onRefresh = () => {
-        fetch('http://118.25.56.186/users/rankbytomatoes', {
+        fetch('http://118.25.56.186/data?author='+this.state.username, {
             method: 'GET',
             headers: {
                   'Content-Type': 'application/json'
@@ -77,12 +158,6 @@ export default class Sharing extends Component {
                 this.setState({
                     data: json,
                 });
-                if(this.state.login){
-                    for (i=0;i<this.state.data.length;i++){
-                        if(this.state.data[i].name==this.state.name)
-                            this.setState({myitem:this.state.data[i]})
-                    }
-                }
             })
             .catch((error) => {
                 if (error) {
@@ -91,19 +166,44 @@ export default class Sharing extends Component {
             });
     }
 
-    handleFill(item){
-        if(this.state.length<=parseInt(item.tomato))
-            this.state.length=parseInt(item.tomato)
-        if(this.state.length!=0){
-            return 1.0*parseInt(item.tomato)/this.state.length
-        }else{
-            return 1.0
+    _renderFooter(){
+        if(this.state.login){
+            return(
+                <View style={{borderRadius:8,margin:5,alignItems: 'center',backgroundColor:'white'}}>
+                    <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
+                    <Text style={{color: '#585858',fontSize:20}}>请下拉以尝试刷新</Text>
+                </View>
+            )
+        }
+    }
+
+    _renderHeader(){
+        if(!this.state.login){
+            return(
+            <View style={{opacity:0.7,alignItems: 'center',height:55,flexDirection:'row',backgroundColor:"white"}}>
+                <TouchableOpacity style={styles.center} onPress={() => navigation.navigate('Login')}>
+                    <Text style={{fontSize:20}}>登录以查看分享历史</Text>
+                </TouchableOpacity>
+            </View>)
         }
     }
 
 
 }
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'rgb(230,230,230)',
+    },    
+    item: {
+        flexWrap: 'wrap',
+        flexDirection: 'column',
+        borderRadius: 8,
+        backgroundColor: 'white',
+        borderColor:'black',
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
     centerContainer: {
         backgroundColor: 'rgb(240,240,240)',
         justifyContent: 'center',
