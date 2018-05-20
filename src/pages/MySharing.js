@@ -45,7 +45,7 @@ export default class Sharing extends Component {
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})
-            fetch('http://118.25.56.186/data?author='+this.state.username, {
+            fetch('http://118.25.56.186/data?name='+this.state.username, {
                 method: 'GET',
                 headers: {
                       'Content-Type': 'application/json'
@@ -147,7 +147,7 @@ export default class Sharing extends Component {
     }
 
     onRefresh = () => {
-        fetch('http://118.25.56.186/data?author='+this.state.username, {
+        fetch('http://118.25.56.186/data?name='+this.state.username, {
             method: 'GET',
             headers: {
                   'Content-Type': 'application/json'
