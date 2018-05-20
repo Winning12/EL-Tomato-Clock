@@ -107,17 +107,29 @@ export default class Home extends Component {
           [{text:'确定',
             onPress:()=>{
               pause=true;
-              display="再次\n开始"
+              display="开始"
               BackHandler.exitApp();
             }},
             {text:'取消',
               onPress:()=>{
-                pause=false;
             }},])
         return true
       }
-      else {
-        return false
+      else{
+        Alert.alert(
+        '退出应用',
+        '计时尚未开始',
+        [{text:'确定',
+          onPress:()=>{
+            pause=true;
+            display="开始"
+            BackHandler.exitApp();
+          }},
+          {text:'取消',
+            onPress:()=>{
+            timepause=true
+          }},])
+        return true
       }
     }
 
@@ -281,12 +293,16 @@ export default class Home extends Component {
         }
       }else{
         this.state.time1=(new Date()).valueOf()+this.state.lasttime
-        return "继续"
+        if(display=='开始')
+          return "开始"
+        else
+          return "继续"
       }
     }
 
     handlePause(){
       if(display=="开始"|display=="再次\n开始"){
+        timePause=false
         pause=!pause
         this.setState({time1:(new Date()).valueOf()+this.state.duration})
       }else if(display=="继续"){
