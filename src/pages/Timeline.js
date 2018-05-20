@@ -17,17 +17,25 @@ import { createAnimatableComponent, View} from 'react-native-animatable'
 var displayTitle="null"
 var imgsrc=""
 var i=0
+var avatars=[require('../resource/1.png'),require('../resource/2.png'),
+require('../resource/3.png'),require('../resource/4.png'),
+require('../resource/5.png'),require('../resource/6.png'),
+require('../resource/7.png'),require('../resource/8.png'),
+require('../resource/9.png'),require('../resource/10.png'),
+require('../resource/11.png'),]
 export default class TimeLine extends Component {
 
     constructor(props) {
         super(props);
         this.getView=this.getView.bind(this)
+        this.handleAvatar=this.handleAvatar.bind(this)
         this.doLike=this.doLike.bind(this)
         this.unLike=this.unLike.bind(this)
         this.showLike=this.showLike.bind(this)
         this.state = {
             visible:false,
             data: [],
+            refresh:true,
             refreshing: false,
             transparent:true,
             year:(new Date()).getFullYear(),
@@ -118,16 +126,16 @@ export default class TimeLine extends Component {
             activeOpacity={0.75}
             onPress={()=>this.showModal(item)}>
                 <View style={styles.item}>
-                    <View style={{alignItems: 'center',flexDirection:'row'}}>
+                    <View style={{alignItems: 'center',flexDirection:'row',marginBottom:10,}}>
                     <View style={styles.avatarContainer}>
                         <Image
                         style={{width: 35, height: 35}}
-                        source={require('../resource/my_avatar.png')}
+                        source={this.handleAvatar(item)}
                         />
                     </View>
                     <Text style={{marginLeft:10,fontSize:20}}>{item.author.name + ''}</Text>
                     </View>
-                    <View style={{marginLeft:50}}>
+                    <View style={{marginLeft:20}}>
                         <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemContent(item)}</Text>
                     </View>
                     <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
@@ -148,6 +156,10 @@ export default class TimeLine extends Component {
             </View>
         )
     };
+
+    handleAvatar(item){
+        return avatars[parseInt(item.author.avatar)]
+    }
 
     handleItemDate(item){
         if(item.year==this.state.year){

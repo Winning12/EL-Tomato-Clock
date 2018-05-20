@@ -12,12 +12,19 @@ import Login from './Login'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 
+var avatars=[require('../resource/1.png'),require('../resource/2.png'),
+require('../resource/3.png'),require('../resource/4.png'),
+require('../resource/5.png'),require('../resource/6.png'),
+require('../resource/7.png'),require('../resource/8.png'),
+require('../resource/9.png'),require('../resource/10.png'),
+require('../resource/11.png'),]
 export default class Profile extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-                name:"",
-                logined:false,
+            name:"",
+            logined:false,
+            avatar:null,
         };
     }
     
@@ -29,6 +36,15 @@ export default class Profile extends PureComponent {
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({name:result})
+            fetch('http://118.25.56.186/users/'+this.state.name+"/userinfo", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                }).then((response) => response.json())
+                .then((jsonData) => {
+                this.setState({avatar:avatars[parseInt(jsonData.avatar)]})
+            })
         })
         AsyncStorage.getItem("logined")
         .then((result) => {
@@ -124,8 +140,8 @@ export default class Profile extends PureComponent {
                     }}>
                     <View style={styles.avatarContainer}>
                         <Image
-                        style={{width: 60, height: 60}}
-                        source={require('../resource/my_avatar.png')}
+                        style={{width: 80, height: 80}}
+                        source={this.state.avatar}
                         />
                     </View>
                     <TouchableOpacity
@@ -188,7 +204,7 @@ export default class Profile extends PureComponent {
                     }}>
                     <View style={styles.avatarContainer}>
                         <Image
-                        style={{width: 60, height: 60}}
+                        style={{width: 80, height: 80}}
                         source={require('../resource/my_avatar.png')}
                         />
                     </View>

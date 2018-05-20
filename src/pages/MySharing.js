@@ -45,6 +45,7 @@ export default class Sharing extends Component {
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})
+            if((this.state.username!="")&&(this.state.username!=null)){
             fetch('http://118.25.56.186/data?name='+this.state.username, {
                 method: 'GET',
                 headers: {
@@ -62,6 +63,7 @@ export default class Sharing extends Component {
                         console.log('error', error);
                     }
                 });
+            }
         })
     }
 
@@ -147,6 +149,7 @@ export default class Sharing extends Component {
     }
 
     onRefresh = () => {
+        if((this.state.name!="")&&(this.state.username!=null))
         fetch('http://118.25.56.186/data?name='+this.state.username, {
             method: 'GET',
             headers: {

@@ -59,6 +59,7 @@ export default class Home extends Component {
             weekday:(new Date()).getDay(),
             tomato:0,
             username:"",
+            location:"",
         };
     }
 
@@ -135,7 +136,7 @@ export default class Home extends Component {
              titleTxt={"刚完成了这些..."}
              ensureCallback={name=> (
                (refreshed=true),
-               this.state.data[i]=(this.state.hour+"时"+this.state.minute+"分"+"       "+name),
+               this.state.data[i]=(this.state.hour+"时"+this.state.minute+"分"+"   "+name),
                this.state.uploadData+=this.state.data[i]+"\n"
                )}
           /> 
