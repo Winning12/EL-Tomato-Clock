@@ -87,8 +87,13 @@ export default class Home extends Component {
       })
       AsyncStorage.getItem("date")
       .then((result) => {
-          if(result!=this.state.year+this.state.month+this.state.day){
-            AsyncStorage.setItem('tomato',"0")
+          if(result!=this.state.year+this.state.month+this.state.day){//一天过去后，保存并清空所有本地统计数据
+            AsyncStorage.getItem("tomato")
+            .then((result) => {
+              AsyncStorage.setItem(this.state.weekday+'',result)
+              AsyncStorage.setItem('tomato',"0")
+            })
+            AsyncStorage.setItem('taskCompleted',"false")
             AsyncStorage.setItem('date',this.state.year+this.state.month+this.state.day)
           }
           AsyncStorage.getItem("tomato")
@@ -254,6 +259,12 @@ export default class Home extends Component {
              headers: {
                  'Content-Type': 'application/json'
              }
+             }).then((response) => response.json())
+             .then((jsonData) => {
+                 let taskreturn = jsonData.info;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
+                 if(taskreturn=="you have finished the task!"){
+                    AsyncStorage.setItem('taskCompleted',"true")
+                 }
              })
          }
         })
