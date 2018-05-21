@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { createAnimatableComponent, View} from 'react-native-animatable'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import * as Progress from 'react-native-progress';
 
 var displayTitle="null"
 var imgsrc=""
@@ -51,6 +52,8 @@ export default class TimeLine extends Component {
             name:"",
             taskRendered:false,
             taskJoined:false,
+            taskCompleted:false,
+            tomato:0,
         };
     }
 
@@ -59,9 +62,24 @@ export default class TimeLine extends Component {
         .then((result) => {
             this.setState({name:result})
         })
-        AsyncStorage.getItem("taskJoined")
+        AsyncStorage.getItem("taskCompleted")
         .then((result) => {
-            this.setState({taskJoined:result})
+            if(result=="false"){
+                AsyncStorage.getItem("taskCompleted")
+                .then((result) => {
+                    if(result=="true")
+                        this.setState({taskJoined:true})
+                    else
+                        this.setState({taskJoined:false})
+                })
+            }
+            else{
+                this.setState({taskCompleted:true})
+            }
+        })
+        AsyncStorage.getItem("tomato")
+        .then((result) => {
+            this.setState({tomato:result})
         })
     }
 
@@ -142,6 +160,7 @@ export default class TimeLine extends Component {
                         </View>
                     </View>
                 </Modal>
+                <Toast ref="joinTask" position='top' opacity={0.6}/>
             </View>
         );
     }
@@ -213,7 +232,6 @@ export default class TimeLine extends Component {
     }
 
     joinTask(){
-        alert("请先登录",1500)
         fetch('http://118.25.56.186/tasks/join', {
             method: 'GET',
             headers: {
@@ -226,43 +244,68 @@ export default class TimeLine extends Component {
                 if(sta=="error"){
                     if(err=="you have joined this task!"){
                         AsyncStorage.setItem('taskJoined',"true")
-                        alert("任务已参加")
+                        this.refs.joinTask.show("任务已参加",1500)
                         this.setState({taskJoined:true})
                     }else if (err=="your points are not enough!"){
                         AsyncStorage.setItem('taskJoined',"false")
-                        alert("当前点数不足\n请多发表时间线积攒")
+                        this.refs.joinTask.show("      当前点数不足\n请多发表时间线积攒",1500)
                         this.setState({taskJoined:false})
                     }else if (err=="notLogin"){
                         AsyncStorage.setItem('taskJoined',"false")
-                        alert("请先登录",1500)
+                        this.refs.joinTask.show("请先登录",1500)
                         this.setState({taskJoined:false})
                     }
                 }else{
                     AsyncStorage.setItem('taskJoined',"true")
+                    this.refs.joinTask.show("参加成功",1500)
                     this.setState({taskJoined:true})
-                }
-                
-          }).catch((error) => {
-            if (error) {
-                alert("网络未连接")
-            }
-        });
+                }  
+            })
     }
 
     _renderTask_Progress(){
-        if(!this.state.taskJoined){
+        if(!this.state.taskCompleted){
+         if(!this.state.taskJoined){
             return(
                 <View style={styles.right}>
                     <TouchableOpacity
                     activeOpacity={0.5}
                     style={styles.loginContainer}
-                    onPress={this.joinTask()}
+                    onPress={this.joinTask}
                     >
                         <Text style={{color: 'black'}}>点击参与</Text>
                     </TouchableOpacity>
                 </View>
             )
+        }else{
+            return(
+                <View style={styles.center}>
+                    <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Text>任务进度</Text>
+                        <Progress.Bar style={{margin:5}} progress={this.handleFill()} width={250} height={8} color="#686868" useNativeDriver/>
+                    </View>
+                </View>
+            )
         }
+        }else{
+            return(
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <Text>任务已完成！</Text>
+                    <Progress.Bar style={{margin:5}} progress={this.handleFill()} width={250} height={8} color="#686868" useNativeDriver/>
+                </View>
+            )
+        }
+    }
+
+    handleFill(){
+        if((this.state.tomato>=10)&&(this.state.taskCompleted!=true)){
+            this.setState({taskCompleted:true})
+            AsyncStorage.setItem('taskCompleted',"true")
+        }
+        if(this.state.tomato==0){
+            return 0
+        }else
+            return this.state.tomato/10
     }
 
     handleAvatar(item){
@@ -369,6 +412,10 @@ export default class TimeLine extends Component {
     count = 0;
 
     onRefresh = () => {
+        AsyncStorage.getItem("tomato")
+        .then((result) => {
+            this.state.tomato=result
+        })
         fetch('http://118.25.56.186/data', {
             method: 'GET',
             headers: {

@@ -49,8 +49,8 @@ export default class Home extends Component {
             data:[],
             time1:(new Date()).valueOf(),
             name:"完成了：",
-            duration:1*10*1000,
-            lasttime:1*10*1000,
+            duration:24*60*1000,
+            lasttime:24*60*1000,
             hour:0,
             minute:0,
             uploadData:"",
@@ -90,7 +90,7 @@ export default class Home extends Component {
           if(result!=this.state.year+this.state.month+this.state.day){//一天过去后，保存并清空所有本地统计数据
             AsyncStorage.getItem("tomato")
             .then((result) => {
-              AsyncStorage.setItem(this.state.weekday+'',result)
+              AsyncStorage.setItem((this.state.weekday-1)+'',result)
               AsyncStorage.setItem('tomato',"0")
             })
             AsyncStorage.setItem('taskJoined',"false")
