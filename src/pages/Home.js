@@ -42,6 +42,7 @@ export default class Home extends Component {
    constructor(props) {
         super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
+        this.handleTimesUp=this.handleTimesUp.bind(this);
         this.state = {
             time:0,
             dataSource:ds,
@@ -247,27 +248,7 @@ export default class Home extends Component {
         display="再次\n开始"
         pause=true
         this.state.weekday=(new Date()).getDay()
-        this.state.tomato=this.state.tomato+1
-        AsyncStorage.setItem('tomato',(this.state.tomato+""))
-        AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
-        AsyncStorage.getItem("logined")
-        .then((result) => {
-         if(result=="true"){
-           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
-           fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
-             method: 'GET',
-             headers: {
-                 'Content-Type': 'application/json'
-             }
-             }).then((response) => response.json())
-             .then((jsonData) => {
-                 let taskreturn = jsonData.info;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
-                 if(taskreturn=="you have finished the task!"){
-                    AsyncStorage.setItem('taskCompleted',"true")
-                 }
-             })
-         }
-        })
+        this.handleTimesUp()
       }
       if(!timePause){
         if (!pause){
@@ -324,6 +305,30 @@ export default class Home extends Component {
           i=i+1
         }
       }
+    }
+
+    handleTimesUp(){
+      this.state.tomato=this.state.tomato+1
+        AsyncStorage.setItem('tomato',(this.state.tomato+""))
+        AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
+        AsyncStorage.getItem("logined")
+        .then((result) => {
+         if(result=="true"){
+           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
+           fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
+             method: 'GET',
+             headers: {
+                 'Content-Type': 'application/json'
+             }
+             }).then((response) => response.json())
+             .then((jsonData) => {
+                 let taskreturn = jsonData.info;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
+                 if(taskreturn=="you have finished the task!"){
+                    AsyncStorage.setItem('taskCompleted',"true")
+                 }
+             })
+         }
+        })
     }
 
     upload(){
