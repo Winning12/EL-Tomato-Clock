@@ -49,8 +49,8 @@ export default class Home extends Component {
             data:[],
             time1:(new Date()).valueOf(),
             name:"完成了：",
-            duration:25*60*1000,
-            lasttime:25*60*1000,
+            duration:1*10*1000,
+            lasttime:1*10*1000,
             hour:0,
             minute:0,
             uploadData:"",
@@ -60,7 +60,6 @@ export default class Home extends Component {
             weekday:(new Date()).getDay(),
             tomato:0,
             username:"",
-            location:"",
         };
     }
 
@@ -94,6 +93,7 @@ export default class Home extends Component {
               AsyncStorage.setItem(this.state.weekday+'',result)
               AsyncStorage.setItem('tomato',"0")
             })
+            AsyncStorage.setItem('taskJoined',"false")
             AsyncStorage.setItem('taskCompleted',"false")
             AsyncStorage.setItem('date',this.state.year+this.state.month+this.state.day)
           }
@@ -309,13 +309,13 @@ export default class Home extends Component {
 
     handleTimesUp(){
       this.state.tomato=this.state.tomato+1
-        AsyncStorage.setItem('tomato',(this.state.tomato+""))
-        AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
-        AsyncStorage.getItem("logined")
-        .then((result) => {
-         if(result=="true"){
-           this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
-           fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
+      AsyncStorage.setItem('tomato',(this.state.tomato+""))
+      AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
+      AsyncStorage.getItem("logined")
+      .then((result) => {
+        if(result=="true"){
+          this.refs.timeup.show("已结束一个番茄周期\n    专注排行已更新",1500);
+          fetch('http://118.25.56.186/users/'+this.state.username+"/"+this.state.tomato+"/updatetomatoes", {
              method: 'GET',
              headers: {
                  'Content-Type': 'application/json'
@@ -326,9 +326,9 @@ export default class Home extends Component {
                  if(taskreturn=="you have finished the task!"){
                     AsyncStorage.setItem('taskCompleted',"true")
                  }
-             })
-         }
-        })
+              })
+        }
+      })
     }
 
     upload(){

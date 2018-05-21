@@ -13,6 +13,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import { createAnimatableComponent, View} from 'react-native-animatable'
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 var displayTitle="null"
 var imgsrc=""
@@ -23,11 +24,16 @@ require('../resource/5.png'),require('../resource/6.png'),
 require('../resource/7.png'),require('../resource/8.png'),
 require('../resource/9.png'),require('../resource/10.png'),
 require('../resource/11.png'),]
+var Dimensions = require('Dimensions');  
+var thisWidth = Dimensions.get('window').width; 
 export default class TimeLine extends Component {
 
     constructor(props) {
         super(props);
         this.getView=this.getView.bind(this)
+        this._renderTask=this._renderTask.bind(this)
+        this._renderTask_Progress=this._renderTask_Progress.bind(this)
+        this.joinTask=this.joinTask.bind(this)
         this.handleAvatar=this.handleAvatar.bind(this)
         this.doLike=this.doLike.bind(this)
         this.unLike=this.unLike.bind(this)
@@ -43,6 +49,8 @@ export default class TimeLine extends Component {
             day:(new Date()).getDate(),
             opacity:0.7,
             name:"",
+            taskRendered:false,
+            taskJoined:false,
         };
     }
 
@@ -51,11 +59,36 @@ export default class TimeLine extends Component {
         .then((result) => {
             this.setState({name:result})
         })
+        AsyncStorage.getItem("taskJoined")
+        .then((result) => {
+            this.setState({taskJoined:result})
+        })
+    }
+
+    componentDidMount() {
+        fetch('http://118.25.56.186/data/', {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
+            .then((response) => {
+                var json = response;
+                this.setState({
+                    data: json,
+                });
+            })
+            .catch((error) => {
+                if (error) {
+                    console.log('error', error);
+                }
+            });
     }
 
     render() {
+        this.state.taskRendered=false
         return (
-            <View style={{flex: 1, backgroundColor: 'rgb(248,248,248)'}}>
+            <View style={{flex: 1, backgroundColor: 'rgb(240,240,240)'}}>
                 <View style={styles.header}>
                     <View style={styles.left}>
                     </View>
@@ -83,9 +116,9 @@ export default class TimeLine extends Component {
                     refreshing={this.state.refreshing}
 
                     ListFooterComponent={
-                        <View style={{borderRadius:8,margin:5,alignItems: 'center',backgroundColor:'white'}}>
-                        <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
-                        <Text style={{color: '#585858',fontSize:20}}>请下拉以尝试刷新</Text>
+                        <View style={{borderRadius:8,margin:5,alignItems: 'center'}}>
+                        <Text style={{color: '#585858',fontSize:20}}> </Text>
+                        <Text style={{color: '#585858',fontSize:20}}> </Text>
                         </View>
                     }
                 />
@@ -122,6 +155,7 @@ export default class TimeLine extends Component {
         this.showLike(item)
         return (
             <View animation='fadeIn' useNativeDriver>
+            {this._renderTask(item)}
             <TouchableOpacity 
             activeOpacity={0.75}
             onPress={()=>this.showModal(item)}>
@@ -133,7 +167,7 @@ export default class TimeLine extends Component {
                         source={this.handleAvatar(item)}
                         />
                     </View>
-                    <Text style={{marginLeft:10,fontSize:20}}>{item.author.name + ''}</Text>
+                    <Text style={{marginLeft:5,fontSize:20}}>{item.author.name + ''}</Text>
                     </View>
                     <View style={{marginLeft:20}}>
                         <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemContent(item)}</Text>
@@ -156,6 +190,80 @@ export default class TimeLine extends Component {
             </View>
         )
     };
+
+    
+    _renderTask(item){
+        if(item==this.state.data[0]){
+            return(
+                <View style={styles.task}>
+                    <View style={{flexDirection:"row",marginLeft:10}}>
+                        <View style={styles.logoContainer}>
+                            <Image
+                            style={{width: 25, height: 25}}
+                            source={require('../resource/logo.png')}
+                            />
+                        </View>
+                        <Text style={{fontSize:15,margin:5}}>每日任务</Text>
+                    </View>
+                    <ImageBackground style={{opacity:0.9,height:(thisWidth-10)*3/7}} source={require("../resource/Task2.png")} resizeMode="cover"/>
+                    {this._renderTask_Progress()}
+                </View>
+            )
+        }
+    }
+
+    joinTask(){
+        alert("请先登录",1500)
+        fetch('http://118.25.56.186/tasks/join', {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
+            .then((jsonData) => {
+                let sta = jsonData.status;
+                let err = jsonData.error;
+                if(sta=="error"){
+                    if(err=="you have joined this task!"){
+                        AsyncStorage.setItem('taskJoined',"true")
+                        alert("任务已参加")
+                        this.setState({taskJoined:true})
+                    }else if (err=="your points are not enough!"){
+                        AsyncStorage.setItem('taskJoined',"false")
+                        alert("当前点数不足\n请多发表时间线积攒")
+                        this.setState({taskJoined:false})
+                    }else if (err=="notLogin"){
+                        AsyncStorage.setItem('taskJoined',"false")
+                        alert("请先登录",1500)
+                        this.setState({taskJoined:false})
+                    }
+                }else{
+                    AsyncStorage.setItem('taskJoined',"true")
+                    this.setState({taskJoined:true})
+                }
+                
+          }).catch((error) => {
+            if (error) {
+                alert("网络未连接")
+            }
+        });
+    }
+
+    _renderTask_Progress(){
+        if(!this.state.taskJoined){
+            return(
+                <View style={styles.right}>
+                    <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles.loginContainer}
+                    onPress={this.joinTask()}
+                    >
+                        <Text style={{color: 'black'}}>点击参与</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+    }
 
     handleAvatar(item){
         return avatars[parseInt(item.author.avatar)]
@@ -287,31 +395,11 @@ export default class TimeLine extends Component {
         this.id = id;
     }
 
-    componentDidMount() {
-        fetch('http://118.25.56.186/data/', {
-            method: 'GET',
-            headers: {
-                  'Content-Type': 'application/json'
-            }
-            }).then((response) => response.json())
-            .then((response) => {
-                var json = response;
-                this.setState({
-                    data: json,
-                });
-            })
-            .catch((error) => {
-                if (error) {
-                    console.log('error', error);
-                }
-            });
-    }
-
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgb(230,230,230)',
+        backgroundColor: 'rgb(240,240,240)',
     },
     centerContainer: {
         backgroundColor: 'rgb(240,240,240)',
@@ -328,12 +416,21 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
     },
+    task:{
+        flex:1,
+        flexDirection: 'column',
+        borderRadius: 8,
+        backgroundColor: 'white',
+        borderColor:'black',
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
     image: {
         width: 90,
         height: 90,
         borderBottomLeftRadius: 5,
         borderTopLeftRadius: 5,
-
     },
     left: {
         flex: 1,
@@ -349,6 +446,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    logoContainer:{
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loginContainer: {
+        margin:5,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderColor: 'rgb(240,240,240)',
+        borderWidth: 1,
+        borderRadius: 2
     },
     right: {
         flex: 1,
