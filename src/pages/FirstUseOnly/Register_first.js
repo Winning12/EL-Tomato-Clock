@@ -220,6 +220,8 @@ export default class RegisterFirst extends Component {
                 this.refs.logininfo.show("用户名已存在");
             }
             else{
+              AsyncStorage.clear();
+              AsyncStorage.setItem('ifFirst',"false"); 
               AsyncStorage.setItem('user',this.state.name); 
               AsyncStorage.setItem('logined',"true");
               this.refs.logininfo.show("注册成功");

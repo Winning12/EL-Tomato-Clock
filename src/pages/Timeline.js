@@ -79,7 +79,7 @@ export default class TimeLine extends Component {
         })
         AsyncStorage.getItem("tomato")
         .then((result) => {
-            this.setState({tomato:result})
+            this.setState({tomato:parseInt(result)})
         })
     }
 
@@ -302,10 +302,10 @@ export default class TimeLine extends Component {
             this.setState({taskCompleted:true})
             AsyncStorage.setItem('taskCompleted',"true")
         }
-        if(this.state.tomato==0){
-            return 0
-        }else
+        if(this.state.tomato>0){
             return this.state.tomato/10
+        }else
+            return 0
     }
 
     handleAvatar(item){
@@ -411,10 +411,30 @@ export default class TimeLine extends Component {
 
     count = 0;
 
+    updateTomato=()=>{
+        fetch('http://118.25.56.186/users/'+this.state.username+"/userinfo", {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+              }).then((response) => response.json())
+              .then((jsonData) => {
+                let tomato = jsonData.tomato;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
+                if(tomato>=10){
+                    AsyncStorage.setItem('taskCompleted',"true")
+                }else{
+                    AsyncStorage.setItem('taskCompleted',"false")
+                }
+                  AsyncStorage.setItem('tomato',""+tomato)
+                  this.state.tomato=tomato
+              })
+    }
+
     onRefresh = () => {
+        this.updateTomato()
         AsyncStorage.getItem("tomato")
         .then((result) => {
-            this.state.tomato=result
+            this.state.tomato=parseInt(result)
         })
         fetch('http://118.25.56.186/data', {
             method: 'GET',

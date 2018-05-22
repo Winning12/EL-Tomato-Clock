@@ -79,6 +79,8 @@ export default class Login extends Component {
             }
             else{
               if (loginreturn=="error"){
+                AsyncStorage.clear();
+                AsyncStorage.setItem('ifFirst',"false"); 
                 AsyncStorage.setItem('user',this.state.name); 
                 AsyncStorage.setItem('logined',"true");
                 this.refs.logininfo.show("已经登录");
@@ -88,6 +90,8 @@ export default class Login extends Component {
               }
               
               else{
+                AsyncStorage.clear();
+                AsyncStorage.setItem('ifFirst',"false"); 
                 AsyncStorage.setItem('user',this.state.name); 
                 AsyncStorage.setItem('logined',"true");
                 this.refs.logininfo.show("登录成功");

@@ -84,15 +84,11 @@ export default class Home extends Component {
       AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({username:result})
+            this.updateTomato()
       })
       AsyncStorage.getItem("date")
       .then((result) => {
           if(result!=this.state.year+this.state.month+this.state.day){//一天过去后，保存并清空所有本地统计数据
-            AsyncStorage.getItem("tomato")
-            .then((result) => {
-              AsyncStorage.setItem((this.state.weekday-1)+'',result)
-              AsyncStorage.setItem('tomato',"0")
-            })
             AsyncStorage.setItem('taskJoined',"false")
             AsyncStorage.setItem('taskCompleted',"false")
             AsyncStorage.setItem('date',this.state.year+this.state.month+this.state.day)
@@ -101,8 +97,24 @@ export default class Home extends Component {
           .then((result) => {
               this.setState({tomato:parseInt(result)})
           })
-      })
-      
+      }) 
+    }
+
+    updateTomato=()=>{
+      fetch('http://118.25.56.186/users/'+this.state.username+"/userinfo", {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
+            .then((jsonData) => {
+              let tomato = jsonData.tomato;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
+              if(tomato>=10){
+                AsyncStorage.setItem('taskCompleted',"true")
+                }
+                AsyncStorage.setItem('tomato',""+tomato)
+                this.state.tomato=tomato
+            })
     }
 
     onBackAndroid=()=>{
@@ -307,7 +319,7 @@ export default class Home extends Component {
       }
     }
 
-    handleTimesUp(){
+    handleTimesUp(){//记录完成一个周期后的各项数据
       this.state.tomato=this.state.tomato+1
       AsyncStorage.setItem('tomato',(this.state.tomato+""))
       AsyncStorage.setItem((this.state.weekday+""),(this.state.tomato+""))
