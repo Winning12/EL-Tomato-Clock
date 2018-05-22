@@ -65,7 +65,7 @@ export default class TimeLine extends Component {
         AsyncStorage.getItem("taskCompleted")
         .then((result) => {
             if(result=="false"){
-                AsyncStorage.getItem("taskCompleted")
+                AsyncStorage.getItem("taskJoined")
                 .then((result) => {
                     if(result=="true")
                         this.setState({taskJoined:true})
