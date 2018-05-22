@@ -44,7 +44,7 @@ export default class _Swiper extends Component {
       activeDot={<View style={{backgroundColor:'white', width: 8, height: 8,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}>
         <View style={styles.slide1}>            
             <View style={styles.center}>
-                <Text style={styles.text}>Welcome to IFruit</Text>
+                <Text style={styles.text}>Welcome to TimeLog</Text>
             </View>
             <View style={styles.center}>
             </View>

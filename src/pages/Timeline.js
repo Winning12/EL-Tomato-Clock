@@ -411,50 +411,46 @@ export default class TimeLine extends Component {
 
     count = 0;
 
-    updateTomato=()=>{
-        fetch('http://118.25.56.186/users/'+this.state.username+"/userinfo", {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-              }).then((response) => response.json())
-              .then((jsonData) => {
-                let tomato = jsonData.tomato;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
-                if(tomato>=10){
-                    AsyncStorage.setItem('taskCompleted',"true")
-                }else{
-                    AsyncStorage.setItem('taskCompleted',"false")
-                }
-                  AsyncStorage.setItem('tomato',""+tomato)
-                  this.state.tomato=tomato
-              })
-    }
 
     onRefresh = () => {
-        this.updateTomato()
-        AsyncStorage.getItem("tomato")
-        .then((result) => {
-            this.state.tomato=parseInt(result)
-        })
-        fetch('http://118.25.56.186/data', {
+        fetch('http://118.25.56.186/users/'+this.state.name+"/userinfo", {
             method: 'GET',
             headers: {
-                  'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             }
             }).then((response) => response.json())
-            .then((response) => {
-                var json = response;
-                this.setState({
-                    data: json,
-                });
-            })
-            .catch((error) => {
-                if (error) {
-                    console.log('error', error);
+            .then((jsonData) => {
+                let _tomato = jsonData.tomato;//检查番茄周期数是否达到任务要求，若服务端返回完成，则存入本地文件。
+                if(_tomato>=10){
+                AsyncStorage.setItem('taskCompleted',"true")
                 }
-            });
+                AsyncStorage.setItem('tomato',""+_tomato)
+                this.setState({tomato:_tomato})
+                fetch('http://118.25.56.186/data', {
+                    method: 'GET',
+                    headers: {
+                          'Content-Type': 'application/json'
+                    }
+                    }).then((response) => response.json())
+                    .then((response) => {
+                        var json = response;
+                        this.setState({
+                            data: json,
+                        });
+                    })
+                    .catch((error) => {
+                        if (error) {
+                            console.log('error', error);
+                        }
+                    });
+            })
+
+
     }
 
+    updateTomato=()=>{
+
+      }
 
     ItemData(images, title, id) {
         this.images = new Array(images);
