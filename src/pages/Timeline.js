@@ -188,7 +188,7 @@ export default class TimeLine extends Component {
                     </View>
                     <Text style={{marginLeft:5,fontSize:20}}>{item.author.name + ''}</Text>
                     </View>
-                    <View style={{marginLeft:20}}>
+                    <View style={{marginLeft:20,marginRight:10}}>
                         <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemContent(item)}</Text>
                     </View>
                     <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>

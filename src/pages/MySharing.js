@@ -46,7 +46,7 @@ export default class Sharing extends Component {
         .then((result) => {
             this.setState({username:result})
             if((this.state.username!="")&&(this.state.username!=null)){
-            fetch('http://118.25.56.186/data?name='+this.state.username, {
+            fetch('http://118.25.56.186/data/'+this.state.username, {
                 method: 'GET',
                 headers: {
                       'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ export default class Sharing extends Component {
 
     onRefresh = () => {
         if((this.state.name!="")&&(this.state.username!=null))
-        fetch('http://118.25.56.186/data?name='+this.state.username, {
+        fetch('http://118.25.56.186/data/'+this.state.username, {
             method: 'GET',
             headers: {
                   'Content-Type': 'application/json'
