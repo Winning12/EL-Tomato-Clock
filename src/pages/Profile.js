@@ -25,6 +25,7 @@ export default class Profile extends PureComponent {
             name:"",
             logined:false,
             avatar:null,
+            points:0,
         };
     }
     
@@ -43,6 +44,7 @@ export default class Profile extends PureComponent {
                 }
                 }).then((response) => response.json())
                 .then((jsonData) => {
+                this.setState({points:parseInt(jsonData.credit+jsonData.like)})
                 this.setState({avatar:avatars[parseInt(jsonData.avatar)]})
             })
         })
@@ -123,7 +125,7 @@ export default class Profile extends PureComponent {
             )
     }
 
-    _render_logined(){
+    _render_logined(){//登陆后显示的页面
         const { navigate } = this.props.navigation;
         return(
              <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
@@ -131,18 +133,19 @@ export default class Profile extends PureComponent {
                 style={{height: 230, alignItems: 'center', backgroundColor: 'transparent'}}
                 source={require('../resource/img_my_head.png')}
                 >
-                    <View style={[styles.header]}>
-                        <Text style={{color: 'white', fontSize: 16}}>{this.state.name}</Text>
-                    </View>
-                    <View style={{
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                    }}>
+                <View style={{
+                alignItems: 'center',
+                justifyContent: 'center'
+                }}>
                     <View style={styles.avatarContainer}>
                         <Image
                         style={{width: 80, height: 80}}
                         source={this.state.avatar}
                         />
+                    </View>
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                        <Text style={{color: 'white', marginTop:3,fontSize: 18}}>{this.state.name}</Text>
+                        <Text style={{color: 'white', marginTop:3,fontSize: 16}}>积分：{this.state.points}</Text>
                     </View>
                     <TouchableOpacity
                     activeOpacity={0.75}
@@ -195,9 +198,6 @@ export default class Profile extends PureComponent {
                 style={{height: 230, alignItems: 'center', backgroundColor: 'transparent'}}
                 source={require('../resource/img_my_head.png')}
                 >
-                    <View style={[styles.header]}>
-                        <Text style={{color: 'white', fontSize: 16}}>{this.state.name}</Text>
-                    </View>
                     <View style={{
                     alignItems: 'center',
                     justifyContent: 'center'
@@ -207,6 +207,10 @@ export default class Profile extends PureComponent {
                         style={{width: 80, height: 80}}
                         source={require('../resource/my_avatar.png')}
                         />
+                    </View>
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                        <Text style={{color: 'white', marginTop:3, fontSize: 18}}> </Text>
+                        <Text style={{color: 'white', marginTop:3, fontSize: 16}}> </Text>
                     </View>
                     <TouchableOpacity
                     activeOpacity={0.75}
@@ -292,9 +296,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 15
+        marginTop: 20,
     },
     loginContainer: {
+        marginTop:10,
         paddingVertical: 5,
         paddingHorizontal: 20,
         borderColor: 'white',

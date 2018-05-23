@@ -148,14 +148,14 @@ export default class TimeLine extends Component {
                     transparent={this.state.transparent}>
                     <View style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0, 0, 0, 0.3)'}}>
                         <View style={{borderRadius: 20,backgroundColor:'white'}}>
-                            <View style={{alignItems: 'center',flexDirection:'row'}}>
+                            <View style={{justifyContent:'center',alignItems: 'center',flexDirection:'row'}}>
                                 <View style={styles.avatarContainer}>
                                     <Image
                                     style={{width: 35, height: 35}}
                                     source={this.handleAvatar(displayAvatar)}
                                     />
                                 </View>
-                                <Text style={{marginLeft:5,fontSize:20}}>{displayName + ''}</Text>
+                                <Text style={{marginLeft:5,marginRight:5,fontSize:20}}>{displayName + ''}</Text>
                             </View>
                             <View style={{alignItems: 'center',margin:20}}>
                                 <Text style={{marginTop: 5, fontSize:20,color: '#585858'}}>{displayTitle}</Text>
@@ -264,7 +264,7 @@ export default class TimeLine extends Component {
     _renderTask(item){
         if(item==this.state.data[0]){
             return(
-                <View style={styles.task}>
+                <View animation='fadeInLeft' style={styles.task} useNativeDriver>
                     <View style={{flexDirection:"row",marginLeft:10}}>
                         <View style={styles.logoContainer}>
                             <Image
@@ -588,6 +588,8 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         height: 50,
+        borderBottomWidth:2,
+        borderColor:'rgb(230,230,230)',
         backgroundColor:'rgb(248,248,248)',
         alignItems: 'center',
     },
