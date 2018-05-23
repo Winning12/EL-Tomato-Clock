@@ -16,8 +16,9 @@ import { createAnimatableComponent, View} from 'react-native-animatable'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import * as Progress from 'react-native-progress';
 
-var displayTitle="null"
-var imgsrc=""
+var displayTitle=""
+var displayAvatar=""
+var displayName=""
 var i=0
 var avatars=[require('../resource/1.png'),require('../resource/2.png'),
 require('../resource/3.png'),require('../resource/4.png'),
@@ -145,18 +146,25 @@ export default class TimeLine extends Component {
                     animationType='fade'
                     visible={this.state.visible}
                     transparent={this.state.transparent}>
-                    <View
-                        style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0, 0, 0, 0.3)'}}>
-                        <View style={{borderRadius: 20,height:400,width:300,backgroundColor:'white'}}>
-                            <View style={{alignItems: 'flex-end',marginRight:20}}>
-                                <TouchableOpacity  onPress={()=>{this.setState({visible:false})}}>
-                                    <Text style={{marginTop: 15, color:'#585858'}}>收起</Text>
-                                </TouchableOpacity>
+                    <View style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0, 0, 0, 0.3)'}}>
+                        <View style={{borderRadius: 20,backgroundColor:'white'}}>
+                            <View style={{alignItems: 'center',flexDirection:'row'}}>
+                                <View style={styles.avatarContainer}>
+                                    <Image
+                                    style={{width: 35, height: 35}}
+                                    source={this.handleAvatar(displayAvatar)}
+                                    />
+                                </View>
+                                <Text style={{marginLeft:5,fontSize:20}}>{displayName + ''}</Text>
                             </View>
                             <View style={{alignItems: 'center',margin:20}}>
-                                <Text style={{marginTop: 15, color: 'black'}}>{displayTitle}</Text>
-                                <Image source={{uri: imgsrc}} style={styles.image}/>
+                                <Text style={{marginTop: 5, fontSize:20,color: '#585858'}}>{displayTitle}</Text>
                             </View>
+                            <TouchableOpacity  onPress={()=>{this.setState({visible:false})}}>
+                                <View style={{height:40,alignItems: 'center',justifyContent:'center',borderTopWidth:1,borderTopColor:'rgb(240,240,240)'}}>
+                                    <Text style={{fontSize:20,color:'#585858'}}>收起</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
@@ -165,9 +173,19 @@ export default class TimeLine extends Component {
         );
     }
 
-    showModal(item){
-        displayTitle=item.name
-        this.setState({visible:true});
+    showModal(item){//仅在行数超标时弹出展开
+        var count=0;
+        for (i=0;i<item.content.length;i++){
+            if (item.content[i]=='\n'){
+                count++;
+            }
+        }
+        if(count>=3){//检测行数
+            displayTitle=item.content
+            displayAvatar=item.author.avatar
+            displayName=item.author.name
+            this.setState({visible:true});
+        }
     }
 
     getView({item}) {
@@ -176,21 +194,18 @@ export default class TimeLine extends Component {
             <View animation='fadeIn' useNativeDriver>
             {this._renderTask(item)}
             <TouchableOpacity 
-            activeOpacity={0.75}
-            onPress={()=>this.showModal(item)}>
+            activeOpacity={0.75}>
                 <View style={styles.item}>
                     <View style={{alignItems: 'center',flexDirection:'row',marginBottom:10,}}>
                     <View style={styles.avatarContainer}>
                         <Image
                         style={{width: 35, height: 35}}
-                        source={this.handleAvatar(item)}
+                        source={this.handleAvatar(item.author.avatar)}
                         />
                     </View>
                     <Text style={{marginLeft:5,fontSize:20}}>{item.author.name + ''}</Text>
                     </View>
-                    <View style={{marginLeft:20,marginRight:10}}>
-                        <Text style={{ color: '#333333',fontSize:18}}>{this.handleItemContent(item)}</Text>
-                    </View>
+                    {this._renderItemContent(item)}
                     <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
                         <Text style={{ color: '#a8a8a8',fontSize:15}}>{this.handleItemDate(item)}</Text>
                         <View style={{justifyContent:'center',alignItems: 'flex-end',flex: 1,marginRight:20}}>
@@ -210,6 +225,41 @@ export default class TimeLine extends Component {
         )
     };
 
+    _renderItemContent(item){
+        var count=1;
+        var res="";
+        var more=false
+        for (i=0;i<item.content.length;i++){
+            if (item.content[i]=='\n'){
+                count++;
+            }
+            if(count>=3){
+                if(i<item.content.length-4){ 
+                    more=true
+                }
+            }else{
+                res+=item.content[i];
+            }
+        }
+        if(more)
+            return (
+                <View style={{marginLeft:20,marginRight:10}}>
+                    <Text style={{ color: '#333333',fontSize:18}}>{res}</Text>
+                    <TouchableOpacity 
+                    style={{height:30,justifyContent:'center',alignItems:'flex-start'}} 
+                    activeOpacity={0.7} 
+                    onPress={()=>this.showModal(item)}>
+                        <Text style={{ color: '#888888',fontSize:15}}>查看全部{count-1}条分享></Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        else
+            return(
+                <View style={{marginLeft:20,marginRight:10}}>
+                    <Text style={{ color: '#333333',fontSize:18}}>{res}</Text>
+                </View>
+            ) 
+    }
     
     _renderTask(item){
         if(item==this.state.data[0]){
@@ -224,7 +274,15 @@ export default class TimeLine extends Component {
                         </View>
                         <Text style={{fontSize:15,margin:5}}>每日任务</Text>
                     </View>
-                    <ImageBackground style={{opacity:0.9,height:(thisWidth-10)*3/7}} source={require("../resource/Task2.png")} resizeMode="cover"/>
+                    <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={this.joinTask}
+                    >
+                    <ImageBackground 
+                    style={{opacity:0.9,height:(thisWidth-10)*3/7}} 
+                    source={require("../resource/Task2.png")} 
+                    resizeMode="cover"/>
+                    </TouchableOpacity>
                     {this._renderTask_Progress()}
                 </View>
             )
@@ -308,8 +366,8 @@ export default class TimeLine extends Component {
             return 0
     }
 
-    handleAvatar(item){
-        return avatars[parseInt(item.author.avatar)]
+    handleAvatar(avatar){
+        return avatars[parseInt(avatar)]
     }
 
     handleItemDate(item){
@@ -327,21 +385,6 @@ export default class TimeLine extends Component {
             return item.year+"年"+item.month+"月"+item.day+"日"+item.hour+"时"+item.min+"分发布"
     }
 
-    handleItemContent(item){
-        var count=0;
-        var res="";
-        for (i=0;i<item.content.length;i++){
-            if (item.content[i]=='\n'){
-                count++;
-            }
-            if(count>=2){
-                res+='\n'+'点击展开'
-                break;
-            }
-            res+=item.content[i];
-        }
-        return res;
-    }
 
     handleLikeNumbers(item){
         if(item.likedusers!=undefined)
