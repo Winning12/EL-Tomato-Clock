@@ -3,12 +3,12 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
   ImageBackground,
   AsyncStorage
 } from 'react-native';
 
+import {createAnimatableComponent, View,} from 'react-native-animatable'
 import Swiper from 'react-native-swiper';
 import { StackNavigator } from 'react-navigation';
 
@@ -31,7 +31,7 @@ export default class _Swiper extends Component {
     AsyncStorage.setItem("5","5")
     AsyncStorage.setItem("6","8")
     AsyncStorage.setItem("7","7")
-  }
+  }//设定一周统计的预设数据，便于演示
 
   render(){
     const { navigate } = this.props.navigation;
@@ -39,48 +39,61 @@ export default class _Swiper extends Component {
       <Swiper 
       style={styles.wrapper} 
       autoplay={true} 
-      autoplayTimeout={1}
+      autoplayTimeout={1.5}
       loop={false}
+      scrollEnabled={false}
       activeDot={<View style={{backgroundColor:'white', width: 8, height: 8,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}>
-        <View style={styles.slide1}>            
-            <View style={styles.center}>
-                <Text style={styles.text}>Welcome to TimeLog</Text>
+      <ImageBackground
+          style={{flex:1}}
+          source={require('../../resource/Back_changed.png')}
+          resizeMode="cover">        
+            <View animation="fadeInLeft" style={styles.center} useNativeDriver>
+                <Text style={styles.text}>规划时间</Text>
             </View>
             <View style={styles.center}>
             </View>
-        </View>
-        <View style={styles.slide2}>
-            <View style={styles.center}>
-                <Text style={styles.text}>Focus</Text>
+        </ImageBackground>
+        <ImageBackground
+          style={{flex:1}}
+          source={require('../../resource/Back_changed.png')}
+          resizeMode="cover">
+            <View animation="fadeInLeft" delay={1500} style={styles.center} useNativeDriver>
+                <Text style={styles.text}>留下墨迹</Text>
             </View>
             <View style={styles.center}>
             </View>
-        </View>
-        <View style={styles.slide3}>
-            <View style={styles.center}>
-                <Text style={styles.text}>And Focus</Text>
+        </ImageBackground>
+        <ImageBackground
+          style={{flex:1}}
+          source={require('../../resource/Back_changed.png')}
+          resizeMode="cover">
+            <View animation="fadeInLeft" delay={3000} style={styles.center} useNativeDriver>
+              <Text style={styles.text}>时墨</Text>
             </View>
             <View style={styles.center}>
+
             </View>
-        </View>
+        </ImageBackground>
         <ImageBackground
           style={{flex:1}}
           source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
           <View style={styles.center}>
-            <Text style={styles.text}>Sign In | Up</Text>
-            <Text style={styles.text}>For Full Experience</Text>
+            <Text style={styles.text_large}>时墨</Text>
+            <Text style={styles.text}></Text>
+            <Text style={styles.text}>让世界看到</Text>
+            <Text style={styles.text}>你的专注</Text>
           </View>
           <View style={styles.center}>
             <TouchableOpacity
             style={styles.button}
             onPress={() => navigate('Signin')}>
-                <Text style={styles.btText}>Experience!</Text>
+                <Text style={styles.btText}>注册以获得完整功能</Text>
             </TouchableOpacity>
             <TouchableOpacity
             style={styles.button}
             onPress={() => navigate('BaseTab')}>
-                <Text style={styles.btText}>Not Now!</Text>
+                <Text style={styles.btText}>体验离线功能</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -100,33 +113,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: 'white',
     },
-    slide1: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#686868',
-    },
-    slide2: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#686868',
-    },
-    slide3: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#686868',
-    },
-    slide4: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#686868',
-    },
     text: {
       color: '#fff',
       fontSize: 30,
+      fontWeight: 'bold',
+      margin:5,
+    },
+    text_large: {
+      color: '#fff',
+      fontSize: 40,
+      marginBottom:20,
       fontWeight: 'bold',
     },
     button: {
@@ -146,5 +142,6 @@ const styles = StyleSheet.create({
     },
     btText: {
         color:  '#686868',
+        fontSize:15
     },
   })
