@@ -127,6 +127,7 @@ export default class Profile extends PureComponent {
 
     _render_logined(){//登陆后显示的页面
         const { navigate } = this.props.navigation;
+        this.refs.logininfo.show("正在刷新数据",500)
         return(
              <View style={{flex: 1, backgroundColor: '#f5f5f5'}}>
                 <ImageBackground
