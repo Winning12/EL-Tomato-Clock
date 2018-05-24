@@ -222,7 +222,7 @@ export default class Profile extends PureComponent {
                     </TouchableOpacity>
             </View>
         </ImageBackground>
-                <View style={[styles.cellContainer]}>
+                <View style={styles.cellContainer}>
                     <ProfileStaticCell
                         title="专注统计"
                         imageName={require('../resource/statistic.png')}
@@ -310,13 +310,17 @@ const styles = StyleSheet.create({
     cellContainer: {
         borderColor: '#d9d9d9',
         marginTop: 15,
-        backgroundColor: 'white'
+        backgroundColor: '#f5f5f5'
     },
     staticCell: {
         flexDirection: 'row',
         height: 46,
+        marginTop:1,
+        borderBottomWidth:1,
+        borderColor:'rgb(230,230,230)',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor:'white',
     },
     cellStyle: {
         flex: 1,

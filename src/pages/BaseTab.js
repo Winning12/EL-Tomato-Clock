@@ -1,4 +1,5 @@
 //By Xue 2018.04.09
+//本项目最先被搭建出的页面（尽管不是最外层导航器）
 import React, { Component } from 'react';
 import {
   Platform,
@@ -10,12 +11,14 @@ import {
 } from 'react-native';
 
 import {TabNavigator,TabBarBottom} from 'react-navigation';  
-import HomePage from './Home';
+import HomePage from './Clock';
 import TimeLine from './Timeline';
 import MyNavigator from './My_navigator';
 import PropTypes from 'prop-types';
 import TabBarItem  from '../components/TabBarItem'
 
+//自定义一个底部导航器
+//导航器包含三个页面
 const Tab = TabNavigator(  
   {  
     Home:{  
@@ -80,8 +83,7 @@ const Tab = TabNavigator(
   );  
 
 
-type Props = {};
-export default class BaseTab extends Component<Props> {
+export default class BaseTab extends Component {
 
   static navigationOptions = {
     header: null,

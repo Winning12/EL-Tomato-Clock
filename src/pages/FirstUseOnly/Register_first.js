@@ -19,6 +19,9 @@ require('../../resource/5.png'),require('../../resource/6.png'),
 require('../../resource/7.png'),require('../../resource/8.png'),
 require('../../resource/9.png'),require('../../resource/10.png'),
 require('../../resource/11.png'),]
+//将所需图片地址加载到数组中便于编号进行随机选择等操作
+
+//从第一次启动时的app介绍界面登陆所显示的注册界面（所属导航器父子层级不同，故不可与一般注册界面合并）
 export default class RegisterFirst extends Component {
 
   static navigationOptions = {
@@ -56,7 +59,7 @@ export default class RegisterFirst extends Component {
       this.setState({renderPlaceholderOnly: false});
     });
   }*/
-  render() {
+  render() {//此处同Login_first页面。
     return this._render_later();
 }
 
@@ -154,7 +157,8 @@ export default class RegisterFirst extends Component {
   </View>
   );
   }
-  _renderRandom(){
+
+  _renderRandom(){//随机选择一个作为头像并显示在页面上，关闭选择界面
     i=Math.floor(11*Math.random())
     return(
       <TouchableOpacity style={styles.choiceContainer} onPress={()=>{this.setState({visible:false,avatar:avatars[i],avatarid:i+""})}}>
@@ -163,7 +167,7 @@ export default class RegisterFirst extends Component {
       )
   }
 
-  _renderChoice(i){
+  _renderChoice(i){//渲染头像选项
     return(
     <TouchableOpacity style={styles.choiceContainer} onPress={()=>{this.setState({visible:false,avatar:avatars[i],avatarid:i+""})}}>
       <Image
@@ -190,7 +194,7 @@ export default class RegisterFirst extends Component {
         </View>)
   }
 
-  regist() {
+  regist() {//注册方法
     if ((this.state.password_veri=="")||(this.state.name=="")||(this.state.password=="")){
         this.refs.logininfo.show("请将信息填写完整")
     }else if(this.state.avatar==null){

@@ -13,8 +13,9 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import { StackNavigator } from 'react-navigation';
 import { createAnimatableComponent, View} from 'react-native-animatable'
 
+//从第一次启动时的app介绍界面登陆所显示的登录界面（所属导航器父子层级不同，故不可与一般登录界面合并）
 export default class Loginfirst extends Component {
-  static navigationOptions = {
+  static navigationOptions = {//导航器header选项
     headerTitle: 
       <View style={{flex: 1,flexDirection: 'column',alignItems: 'center'}}>
         <Text style={{color: '#686868',fontSize:20}}>登录</Text>
@@ -44,18 +45,18 @@ export default class Loginfirst extends Component {
         };
     }
 
-  componentDidMount() {
+  /*componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({renderPlaceholderOnly: false});
     });
-  }
+  }*/
+  //原计划做逐层渲染的代码，因性能足够，没有采用
 
-  loginin() {
+  loginin() {//向服务器发送数据和存储本地的登录功能
     if ((this.state.name=="")||(this.state.password=="")){
         this.refs.logininfo.show("用户名或密码为空！")
     }
     else{
-      //when tested on server,use http://www.clavier.moe
         fetch('http://118.25.56.186/signin', {
         method: 'POST',
         headers: {
@@ -85,9 +86,8 @@ export default class Loginfirst extends Component {
                 this.refs.logininfo.show("已经登录");
                 this.timer = setTimeout(() => {
                   this.props.navigation.navigate('BaseTab');
-                }, 1000)
+                }, 1000)//延迟1秒后进入Tab导航器
               }
-              
               else{
                 AsyncStorage.clear();
                 AsyncStorage.setItem('ifFirst',"false"); 
@@ -103,7 +103,7 @@ export default class Loginfirst extends Component {
     }
   }
 
-  loginout(){
+  loginout(){//便于测试登录逻辑的登出方法，没有使用在release版中
     fetch('http://118.25.56.186/signout', {
         method: 'POST',
         headers: {
@@ -116,18 +116,20 @@ export default class Loginfirst extends Component {
     })
   }
 
-  regist(){
+  regist(){//用户点击右上角时，导航至注册界面
     this.props.navigation.replace({
       scene: Register,
     });
   }
 
-  _conceal(){
+  _conceal(){//改变密码显示状态
     this.setState({conceal:!this.state.conceal});
   }
 
   render() {
-      return this._render_later();//now render only once
+      return this._render_later();
+      //便于做逐层渲染，将组件先抽象至各层的渲染方法
+      //再根据需要渲染（因性能足够，此处只有一层）
   }
 
   _render_later() {
@@ -206,6 +208,7 @@ export default class Loginfirst extends Component {
     );
   }
   
+  //被弃用的其他方法
   /*_render_earlier() {
     return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -229,6 +232,7 @@ export default class Loginfirst extends Component {
 
 
 const styles = StyleSheet.create({
+  //样式表，因同名样式在不同页面须作微调，故没有导出到外部存储再引用，避免混淆
   container: {
     flex: 1,
     justifyContent: 'center',

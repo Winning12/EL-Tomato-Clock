@@ -181,6 +181,10 @@ export default class Ranking extends Component {
 
 }
 const styles = StyleSheet.create({
+    container: {
+        flex:1,
+        backgroundColor: 'rgb(240,240,240)',
+    },
     centerContainer: {
         backgroundColor: 'rgb(240,240,240)',
         justifyContent: 'center',

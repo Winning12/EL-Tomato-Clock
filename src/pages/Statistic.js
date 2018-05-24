@@ -210,6 +210,9 @@ export default class Statistic extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'rgb(240,240,240)',
+  },
   centerContainer: {
       backgroundColor: 'rgb(240,240,240)',
       justifyContent: 'center',

@@ -10,12 +10,14 @@ import {
 } from 'react-native'
 import { StackNavigator } from 'react-navigation';
 import {createAnimatableComponent, View} from 'react-native-animatable'
-
+var Dimensions = require('Dimensions');  
+var thisWidth = Dimensions.get('window').width; 
 export default class Sharing extends Component {
     constructor(props) {
         super(props);
         navigation=this.props.navigation;
         this.getView=this.getView.bind(this)
+        this._renderBlank=this._renderBlank.bind(this)
         this._renderFooter=this._renderFooter.bind(this)
         this._renderHeader=this._renderHeader.bind(this)
         this.state = {
@@ -81,6 +83,7 @@ export default class Sharing extends Component {
     render(){
         return (
            <View style={styles.container}>
+                {this._renderBlank()}
                 {this._renderHeader()}
                 <FlatList
                     data={this.state.data}
@@ -170,12 +173,20 @@ export default class Sharing extends Component {
     }
 
     _renderFooter(){
-        if(this.state.login){
+        if(this.state.data.length>=0&&this.state.login){
             return(
                 <View style={{borderRadius:8,margin:5,alignItems: 'center',backgroundColor:'white'}}>
                     <Text style={{color: '#585858',fontSize:20}}>没有更多数据</Text>
                     <Text style={{color: '#585858',fontSize:20}}>请下拉以尝试刷新</Text>
                 </View>
+            )
+        }
+    }
+
+    _renderBlank(){
+        if(this.state.data.length==0&&this.state.login){
+            return(
+                <ImageBackground style={{opacity:0.9,height:(thisWidth)*16/9}} source={require('../resource/blank.png')} resizeMode='cover'/>
             )
         }
     }
@@ -195,6 +206,7 @@ export default class Sharing extends Component {
 }
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         backgroundColor: 'rgb(230,230,230)',
     },    
     item: {

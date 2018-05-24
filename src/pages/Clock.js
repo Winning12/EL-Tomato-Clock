@@ -36,8 +36,8 @@ import RNKeyguardModule from '../components/Origin'
     var s=0
 } 
 
-export default class Home extends Component {
-
+//番茄钟页面
+export default class Clock extends Component {
 
    constructor(props) {
         super(props);
@@ -63,21 +63,23 @@ export default class Home extends Component {
         };
     }
 
-    handleAppStateChange(appState){
-      if(appState==='background'){
-          RNKeyguardModule.isLocked((unlocked)=>{
-              if(unlocked){
-                  timePause=true;
-              }
-          })
-      }
-    }
-
-    componentWillMount() {
+    componentWillMount() {//在组件加载前，添加对app状态和返回键（返回键仅安卓）的监听器
       if (Platform.OS === 'android') {
           BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
       }
       AppState.addEventListener('change',this.handleAppStateChange.bind(this));
+    }
+    
+    handleAppStateChange(appState){
+      if(appState==='background'){
+          RNKeyguardModule.isLocked((unlocked)=>{
+              if(unlocked&&display!="开始"){
+                this.refs.timeup.show("计时已经暂停",1500)
+                timePause=true;
+                //检测到应用进入后台但不是锁屏，如果计时已开始，则将计时暂停 
+              }
+          })
+      }
     }
 
     componentDidMount() {

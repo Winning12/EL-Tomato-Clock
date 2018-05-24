@@ -12,6 +12,7 @@ import {createAnimatableComponent, View,} from 'react-native-animatable'
 import Swiper from 'react-native-swiper';
 import { StackNavigator } from 'react-navigation';
 
+//用于在第一次启动时，演示app功能
 export default class _Swiper extends Component {
 
   constructor(props) {
