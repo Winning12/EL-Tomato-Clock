@@ -18,6 +18,7 @@ require('../resource/5.png'),require('../resource/6.png'),
 require('../resource/7.png'),require('../resource/8.png'),
 require('../resource/9.png'),require('../resource/10.png'),
 require('../resource/11.png'),]
+//专注排名功能
 export default class Ranking extends Component {
     constructor(props) {
         super(props);

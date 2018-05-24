@@ -18,6 +18,7 @@ require('../resource/5.png'),require('../resource/6.png'),
 require('../resource/7.png'),require('../resource/8.png'),
 require('../resource/9.png'),require('../resource/10.png'),
 require('../resource/11.png'),]
+//个人资料页面
 export default class Profile extends PureComponent {
     constructor(props) {
         super(props);

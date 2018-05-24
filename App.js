@@ -39,7 +39,7 @@ export const ProfileRoutes = StackNavigator({
 });
 
 
-
+//程序入口，最上级的导航器
 export default class App extends Component {
       
   render() {

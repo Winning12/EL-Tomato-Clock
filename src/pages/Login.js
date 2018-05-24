@@ -12,7 +12,7 @@ import {
     } from 'react-native'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { StackNavigator } from 'react-navigation';
-
+//注释部分同login_first
 export default class Login extends Component {
   static navigationOptions = {
     headerTitle: 

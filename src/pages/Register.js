@@ -19,6 +19,7 @@ require('../resource/5.png'),require('../resource/6.png'),
 require('../resource/7.png'),require('../resource/8.png'),
 require('../resource/9.png'),require('../resource/10.png'),
 require('../resource/11.png'),]
+//注释部分同register_first
 export default class Register extends Component {
 
   static navigationOptions = {

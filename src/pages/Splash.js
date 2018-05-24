@@ -10,6 +10,7 @@ import {Dimensions,PixelRatio} from 'react-native';
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 
 let {WIDTH,HEIGHT} = Dimensions.get("window");
+//应用开启时的加载页面
 export default class Splash extends Component {
     constructor(props) {
         super(props);

@@ -12,6 +12,7 @@ import { StackNavigator } from 'react-navigation';
 import {createAnimatableComponent, View} from 'react-native-animatable'
 var Dimensions = require('Dimensions');  
 var thisWidth = Dimensions.get('window').width; 
+//查看个人分享历史的界面
 export default class Sharing extends Component {
     constructor(props) {
         super(props);

@@ -29,6 +29,7 @@ require('../resource/9.png'),require('../resource/10.png'),
 require('../resource/11.png'),]
 var Dimensions = require('Dimensions');  
 var thisWidth = Dimensions.get('window').width; 
+//时间线页面
 export default class TimeLine extends Component {
 
     constructor(props) {

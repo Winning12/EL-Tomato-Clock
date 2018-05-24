@@ -16,6 +16,7 @@ var weekdays=[require('../resource/Mon.png'),require('../resource/Tue.png'),
 require('../resource/Wed.png'),require('../resource/Thu.png'),
 require('../resource/Fri.png'),require('../resource/Sat.png'),
 require('../resource/Sun.png'),]
+//每周统计页面
 export default class Statistic extends Component {
 
   constructor(props) {
