@@ -3,6 +3,7 @@ package com.main;
 import android.app.Application;
 import com.PM.RNKeyguardPackage;
 import com.facebook.react.ReactApplication;
+import org.lovebing.reactnative.baidumap.BaiduMapPackage;
 import com.horcrux.svg.SvgPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,6 +25,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BaiduMapPackage(getApplicationContext()),
             new SvgPackage(),
 			  new RNKeyguardPackage());
     }
@@ -38,7 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
   }
-
+  
+  
   @Override
   public void onCreate() {
     super.onCreate();

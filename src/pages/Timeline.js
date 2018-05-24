@@ -15,6 +15,7 @@ import {
 import { createAnimatableComponent, View} from 'react-native-animatable'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import * as Progress from 'react-native-progress';
+import {Geolocation} from 'react-native-baidu-map';
 
 var displayTitle=""
 var displayAvatar=""
@@ -54,14 +55,19 @@ export default class TimeLine extends Component {
             taskRendered:false,
             taskJoined:false,
             taskCompleted:false,
-            tomato:0,
+            tomato:0,      
+            latitude:0.000000,
+            longitude:0.000000,//初始化位置
         };
     }
 
     componentWillMount(){
+        this.updateLocation()
+        this.loadLocation_location()
         AsyncStorage.getItem("user")
         .then((result) => {
             this.setState({name:result})
+            this.loadLocation_online()
         })
         AsyncStorage.getItem("taskCompleted")
         .then((result) => {
@@ -103,6 +109,48 @@ export default class TimeLine extends Component {
                 }
             });
     }
+
+    updateLocation=()=> {//记录当前位置
+        Geolocation.getCurrentPosition()
+            .then(data => {
+                AsyncStorage.setItem("latitude",data.latitude)
+                AsyncStorage.setItem("longitude",data.longitude)
+                fetch('http://118.25.56.186/users/'+data.latitude+","+data.longitude+"/updatelocation", {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+                })
+            })
+            .catch(e =>{
+                console.warn(e, 'error');
+            })
+    }
+
+    loadLocation_location=()=>{//从本地和网络读取数据
+        AsyncStorage.getItem("latitude")
+        .then((result) => {
+            if(result!=null)
+            this.setState({latitude:result})
+        })
+        AsyncStorage.getItem("longitude")
+        .then((result) => {
+            if(result!=null)
+            this.setState({longitude:result})
+        })
+    }
+
+    loadLocation_online=()=>{
+        fetch('http://118.25.56.186/users/'+this.state.name+'/userinfo', {
+            method: 'GET',
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+            }).then((response) => response.json())
+            .then((jsonData) => {
+                this.setState({latitude:jsonData.location.split(",")[0],longitude:jsonData.location.split(",")[1]})
+            })
+        }
 
     render() {
         this.state.taskRendered=false
@@ -188,7 +236,7 @@ export default class TimeLine extends Component {
         }
     }
 
-    getView({item}) {
+    getView({item}) {//渲染每一条分享
         this.showLike(item)
         return (
             <View animation='fadeIn' useNativeDriver>
@@ -207,7 +255,9 @@ export default class TimeLine extends Component {
                     </View>
                     {this._renderItemContent(item)}
                     <View style={{flexDirection:'row',marginLeft:20,marginTop:10,marginBottom:5}}>
-                        <Text style={{ color: '#a8a8a8',fontSize:15}}>{this.handleItemDate(item)}</Text>
+                        <Text style={{ color: '#a8a8a8',fontSize:15}}>
+                            {this.handleItemDate(item)}    {this.handleDistance(item)}
+                        </Text>
                         <View style={{justifyContent:'center',alignItems: 'flex-end',flex: 1,marginRight:20}}>
                             <TouchableOpacity 
                             activeOpacity={0.5}
@@ -289,6 +339,7 @@ export default class TimeLine extends Component {
         }
     }
 
+
     joinTask(){
         fetch('http://118.25.56.186/tasks/join', {
             method: 'GET',
@@ -353,6 +404,41 @@ export default class TimeLine extends Component {
                 </View>
             )
         }
+    }
+
+    
+
+    handleDistance(item){//解析位置并计算出距离
+        if(item.author.name==this.state.name){
+            return "自己"
+        }
+        if(item.author.location!=undefined){
+        var lat1=item.author.location.split(",")[0]
+        var lng1=item.author.location.split(",")[1]
+            if(this.GPStoM(this.state.latitude,this.state.longitude,lat1,lng1)<500)
+                return "五百米内"
+            else if(this.GPStoM(this.state.latitude,this.state.longitude,lat1,lng1)<1000)
+                return "一千米内"
+            else if(this.GPStoM(this.state.latitude,this.state.longitude,lat1,lng1)<2000)
+                return "两千米内"
+            else if(this.GPStoM(this.state.latitude,this.state.longitude,lat1,lng1)<5000)
+                return "五千米内"
+            else return ""
+        }
+    }
+
+    GPStoM(lat_a, lng_a, lat_b, lng_b) {
+        let EARTH_RADIUS = 6371000.0;
+        let radLat1 = (lat_a * Math.PI / 180.0);
+        let radLat2 = (lat_b * Math.PI / 180.0);
+        let a = radLat1 - radLat2;
+        let b = (lng_a - lng_b) * Math.PI / 180.0;
+        let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+            + Math.cos(radLat1) * Math.cos(radLat2)
+            * Math.pow(Math.sin(b / 2), 2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000;
+        return s;
     }
 
     handleFill(){
@@ -456,6 +542,8 @@ export default class TimeLine extends Component {
 
 
     onRefresh = () => {
+        this.loadLocation_online()
+        this.updateLocation()
         fetch('http://118.25.56.186/users/'+this.state.name+"/userinfo", {
             method: 'GET',
             headers: {

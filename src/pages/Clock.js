@@ -19,6 +19,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import TextInput from '../components/_TextInput'
 import { createAnimatableComponent, View, Text } from 'react-native-animatable'
 import RNKeyguardModule from '../components/Origin'
+import {Geolocation} from 'react-native-baidu-map';
 
 {
     var display="开始"
@@ -87,6 +88,7 @@ export default class Clock extends Component {
         .then((result) => {
             this.setState({username:result})
             this.updateTomato()
+            this.updateLocation()
       })
       AsyncStorage.getItem("date")
       .then((result) => {
@@ -97,7 +99,7 @@ export default class Clock extends Component {
           }
           AsyncStorage.getItem("tomato")
           .then((result) => {
-              this.setState({tomato:parseInt(result)})
+            this.setState({tomato:parseInt(result)})
           })
       }) 
     }
@@ -117,6 +119,23 @@ export default class Clock extends Component {
                 AsyncStorage.setItem('tomato',""+tomato)
                 this.state.tomato=tomato
             })
+    }
+
+    updateLocation=()=> {//更新位置
+      Geolocation.getCurrentPosition()
+          .then(data => {
+            AsyncStorage.setItem("latitude",data.latitude)
+            AsyncStorage.setItem("longitude",data.longitude)
+            fetch('http://118.25.56.186/users/'+data.latitude+","+data.longitude+"/updatelocation", {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+              })
+          })
+          .catch(e =>{
+              console.warn(e, 'error');
+          })
     }
 
     onBackAndroid=()=>{
@@ -188,7 +207,7 @@ export default class Clock extends Component {
       return(
         <View style={styles.header}>
           <View animation="bounceIn" style={styles.left} useNativeDriver>
-            {/*Xue:如果为ios,若报错请移除useNativeDriver*/}
+            {/*Xue:如果为ios下报错请移除useNativeDriver*/}
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonContainer}
@@ -346,6 +365,7 @@ export default class Clock extends Component {
     }
 
     upload(){
+      this.updateLocation()
       fetch('http://118.25.56.186/data/create', {
         method: 'POST',
         headers: {
