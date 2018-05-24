@@ -144,7 +144,7 @@ export default class TimeLine extends Component {
         fetch('http://118.25.56.186/users/'+this.state.name+'/userinfo', {
             method: 'GET',
             headers: {
-                  'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             }
             }).then((response) => response.json())
             .then((jsonData) => {
