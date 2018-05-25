@@ -17,6 +17,8 @@ require('../resource/Wed.png'),require('../resource/Thu.png'),
 require('../resource/Fri.png'),require('../resource/Sat.png'),
 require('../resource/Sun.png'),]
 //每周统计页面
+var Dimensions = require('Dimensions');  
+var thisWidth = Dimensions.get('window').width; 
 export default class Statistic extends Component {
 
   constructor(props) {
@@ -160,7 +162,7 @@ export default class Statistic extends Component {
           </View>
           <View style={{marginLeft:5,flexDirection:'column'}}>
             <Text style={{fontSize:18}}>{this.handleChinese(weekday)}</Text>
-            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(weekday)} width={250} height={8} color="#686868"  useNativeDriver/>
+            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(weekday)} width={thisWidth-100} height={8} color="#686868"  useNativeDriver/>
           </View>
         </View>
     )
@@ -181,7 +183,7 @@ export default class Statistic extends Component {
           </View>
           <View style={{marginLeft:5,flexDirection:'column'}}>
             <Text style={{fontSize:18}}>{this.handleChinese(this.state.count+1)}</Text>
-            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.count+1)} width={250} height={8} color="#686868"  useNativeDriver/>
+            <Progress.Bar style={{marginTop:5}} progress={this.handleFill(this.state.count+1)} width={thisWidth-100} height={8} color="#686868"  useNativeDriver/>
           </View>
         </View>
     )

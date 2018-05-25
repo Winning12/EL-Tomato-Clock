@@ -65,8 +65,8 @@ export default class _Swiper extends Component {
             <View animation="fadeInLeft" delay={2500} style={styles.center} useNativeDriver>
                 <Text style={styles.text}>时间线上</Text>
                 <Text style={styles.text}>留下你的墨迹</Text>
-                <View animation="fadeInRight" delay={2500} useNativeDriver>
-                  <Image style={{height:(thisWidth-100)*1.8}} source={require('../../resource/swiper2.png')} resizeMode="contain"/>
+                <View animation="fadeInRight" delay={2300} useNativeDriver>
+                  <Image style={{height:(thisWidth-120)*1.8}} source={require('../../resource/swiper2.png')} resizeMode="contain"/>
                 </View>
             </View>
         </ImageBackground>
@@ -74,11 +74,11 @@ export default class _Swiper extends Component {
           style={{flex:1}}
           source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
-            <View animation="fadeInLeft" delay={5000} style={styles.center} useNativeDriver>
+            <View animation="fadeInDown" delay={5000} style={styles.center} useNativeDriver>
               <Text style={styles.text}>完整社区体验</Text>
               <Text style={styles.text}>营造专注氛围</Text>
-              <View animation="fadeInRight" delay={5000} useNativeDriver>
-                  <Image style={{height:(thisWidth-100)*1.8}} source={require('../../resource/swiper3.png')} resizeMode="contain"/>
+              <View animation="fadeInUp" delay={4900} useNativeDriver>
+                  <Image style={{height:(thisWidth-120)*1.8}} source={require('../../resource/swiper3.png')} resizeMode="contain"/>
               </View>
             </View>
         </ImageBackground>

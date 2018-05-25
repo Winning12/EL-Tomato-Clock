@@ -12,6 +12,8 @@ import { StackNavigator } from 'react-navigation';
 import {createAnimatableComponent, View} from 'react-native-animatable'
 import * as Progress from 'react-native-progress';
 
+var Dimensions = require('Dimensions');  
+var thisWidth = Dimensions.get('window').width; 
 var avatars=[require('../resource/1.png'),require('../resource/2.png'),
 require('../resource/3.png'),require('../resource/4.png'),
 require('../resource/5.png'),require('../resource/6.png'),
@@ -137,7 +139,7 @@ export default class Ranking extends Component {
             </View>
             <View style={{marginLeft:5,flexDirection:'column'}}>
                 <Text style={{fontSize:18}}>{item.name}</Text>
-                <Progress.Bar style={{marginTop:5}} progress={this.handleFill(item)} width={250} height={8} color="#686868"/>
+                <Progress.Bar style={{marginTop:5}} progress={this.handleFill(item)} width={thisWidth-100} height={8} color="#686868"/>
             </View>
         </View>
         )
