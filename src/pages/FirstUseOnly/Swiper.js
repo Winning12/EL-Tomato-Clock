@@ -5,13 +5,15 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from 'react-native';
 
 import {createAnimatableComponent, View,} from 'react-native-animatable'
 import Swiper from 'react-native-swiper';
 import { StackNavigator } from 'react-navigation';
-
+var Dimensions = require('Dimensions');  
+var thisWidth = Dimensions.get('window').width; 
 //用于在第一次启动时，演示app功能
 export default class _Swiper extends Component {
 
@@ -40,7 +42,7 @@ export default class _Swiper extends Component {
       <Swiper 
       style={styles.wrapper} 
       autoplay={true} 
-      autoplayTimeout={1.5}
+      autoplayTimeout={2.4}
       loop={false}
       scrollEnabled={false}
       activeDot={<View style={{backgroundColor:'white', width: 8, height: 8,borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}>
@@ -49,30 +51,35 @@ export default class _Swiper extends Component {
           source={require('../../resource/Back_changed.png')}
           resizeMode="cover">        
             <View animation="fadeInLeft" style={styles.center} useNativeDriver>
-                <Text style={styles.text}>规划时间</Text>
-            </View>
-            <View style={styles.center}>
+                <Text style={styles.text}>番茄工作法</Text>
+                <Text style={styles.text}>规划你的时间</Text>
+                <View animation="fadeInUp" useNativeDriver>
+                  <Image style={{height:(thisWidth-100)*1.8}} source={require('../../resource/swiper1.png')} resizeMode="contain"/>
+                </View>
+            </View>     
+        </ImageBackground>
+        <ImageBackground
+          style={{flex:1}}
+          source={require('../../resource/Back_changed.png')}
+          resizeMode="cover">
+            <View animation="fadeInLeft" delay={2500} style={styles.center} useNativeDriver>
+                <Text style={styles.text}>时间线上</Text>
+                <Text style={styles.text}>留下你的墨迹</Text>
+                <View animation="fadeInRight" delay={2500} useNativeDriver>
+                  <Image style={{height:(thisWidth-100)*1.8}} source={require('../../resource/swiper2.png')} resizeMode="contain"/>
+                </View>
             </View>
         </ImageBackground>
         <ImageBackground
           style={{flex:1}}
           source={require('../../resource/Back_changed.png')}
           resizeMode="cover">
-            <View animation="fadeInLeft" delay={1500} style={styles.center} useNativeDriver>
-                <Text style={styles.text}>留下墨迹</Text>
-            </View>
-            <View style={styles.center}>
-            </View>
-        </ImageBackground>
-        <ImageBackground
-          style={{flex:1}}
-          source={require('../../resource/Back_changed.png')}
-          resizeMode="cover">
-            <View animation="fadeInLeft" delay={3000} style={styles.center} useNativeDriver>
-              <Text style={styles.text}>时墨</Text>
-            </View>
-            <View style={styles.center}>
-
+            <View animation="fadeInLeft" delay={5000} style={styles.center} useNativeDriver>
+              <Text style={styles.text}>完整社区体验</Text>
+              <Text style={styles.text}>营造专注氛围</Text>
+              <View animation="fadeInRight" delay={5000} useNativeDriver>
+                  <Image style={{height:(thisWidth-100)*1.8}} source={require('../../resource/swiper3.png')} resizeMode="contain"/>
+              </View>
             </View>
         </ImageBackground>
         <ImageBackground
